@@ -1,0 +1,5 @@
+.idea/
+cache/*
+!cache/.gitkeep
+!cache/img/.gitkeep
+index.html
