@@ -1,6 +1,8 @@
 <?php
 
-class Deploy
+namespace BrizyDeploy;
+
+class Deploy implements DeployInterface
 {
     /**
      * @var array
@@ -16,6 +18,7 @@ class Deploy
     {
         $zip = zip_open($this->getZipPath());
         if (!is_resource($zip)) {
+            $this->errors['general'][] = 'Invalid zip resource';
             $this->is_succeeded = false;
         }
 
@@ -23,9 +26,9 @@ class Deploy
             $name = zip_entry_name($zip_entry);
             if (!preg_match("/\/$/", $name)) {
                 $asset_content = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-                $bytes = file_put_contents(__DIR__ . '/../' . $name, $asset_content);
+                $bytes = file_put_contents(__DIR__ . '/../../' . $name, $asset_content);
                 if ($bytes === false) {
-                    $this->errors[] = $name;
+                    $this->errors['files'][] = $name;
                 }
             }
         }
@@ -42,11 +45,17 @@ class Deploy
         return '/home/andrei/Desktop/dbcdf348d69a85ff0b5a9b002e360fa5/cache.zip';
     }
 
+    /**
+     * @return array
+     */
     public function getErrors()
     {
         return $this->errors;
     }
 
+    /**
+     * @return bool
+     */
     public function isSucceeded()
     {
         return $this->is_succeeded;

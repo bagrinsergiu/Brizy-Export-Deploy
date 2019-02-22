@@ -1,8 +1,12 @@
 <?php
 
-class Config
+namespace BrizyDeploy;
+
+use BrizyDeploy\Exception\AppException;
+
+class App implements AppInterface
 {
-    const CONFIG_PATH = 'var/config.json';
+    const CONFIG_PATH = __DIR__ . '/../../var/config.json';
 
     /**
      * @var array
@@ -10,22 +14,24 @@ class Config
     protected $config;
 
     /**
-     * Config constructor.
+     * App constructor.
+     * @throws AppException
      */
     public function __construct()
     {
-        $this->config = $this->toArray();
+        $this->config = $this->toArrayConfig();
     }
 
     /**
      * @return array
+     * @throws AppException
      */
-    protected function toArray()
+    protected function toArrayConfig()
     {
         $config = file_get_contents(self::CONFIG_PATH);
         $config = json_decode($config, true);
         if (!$config) {
-            return [];
+            throw new AppException('Invalid config file');
         }
 
         return $config;
@@ -34,7 +40,7 @@ class Config
     /**
      * @return array
      */
-    public function get()
+    public function getConfig()
     {
         return $this->config;
     }
@@ -42,7 +48,7 @@ class Config
     /**
      * @return $this
      */
-    public function save()
+    public function saveConfig()
     {
         file_put_contents(self::CONFIG_PATH, json_encode($this->config));
 
@@ -61,6 +67,10 @@ class Config
         return false;
     }
 
+    /**
+     * @param $is_installed
+     * @return $this
+     */
     public function setIsInstalled($is_installed)
     {
         if (isset($this->config['installed'])) {

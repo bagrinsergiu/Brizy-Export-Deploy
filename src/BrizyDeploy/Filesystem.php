@@ -1,6 +1,8 @@
 <?php
 
-class Filesystem
+namespace BrizyDeploy;
+
+class Filesystem implements FilesystemInterface
 {
     /**
      * @param array $patterns

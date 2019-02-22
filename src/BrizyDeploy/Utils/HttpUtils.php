@@ -1,5 +1,7 @@
 <?php
 
+namespace BrizyDeploy\Utils;
+
 class HttpUtils
 {
     static public function getHttpStatus($num) {

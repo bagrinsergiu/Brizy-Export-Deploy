@@ -369,13 +369,13 @@ class BrizyDeployRequirements extends RequirementCollection
         );
 
         $this->addRequirement(
-            is_dir('cache/'),
+            is_dir(__DIR__ . '/../cache/'),
             'Directory cache/ must exists',
             'Create "<strong>cache/</strong>" directory.'
         );
 
         $this->addRequirement(
-            is_dir('cache/img/'),
+            is_dir(__DIR__ . '/../cache/img/'),
             'Directory cache/img/ must exists',
             'Create "<strong>cache/img/</strong>" directory.'
         );
@@ -387,19 +387,19 @@ class BrizyDeployRequirements extends RequirementCollection
         );
 
         $this->addRequirement(
-            is_writable('cache/'),
+            is_writable(__DIR__ . '/../cache/'),
             'cache/ directory must be writable',
             'Change the permissions of either "<strong>cache/</strong>" directory so that the web server can write into it.'
         );
 
         $this->addRequirement(
-            is_writable('cache/img/'),
+            is_writable(__DIR__ . '/../cache/img/'),
             'cache/img/ directory must be writable',
             'Change the permissions of either "<strong>cache/img/</strong>" directory so that the web server can write into it.'
         );
 
         $this->addRequirement(
-            is_writable('var/'),
+            is_writable(__DIR__ .'/../var/'),
             'var/ directory must be writable',
             'Change the permissions of either "<strong>var/</strong>" directory so that the web server can write into it.'
         );

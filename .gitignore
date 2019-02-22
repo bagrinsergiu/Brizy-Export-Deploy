@@ -3,3 +3,5 @@ cache/*
 !cache/.gitkeep
 !cache/img/.gitkeep
 index.html
+var/*
+!var/.gitkeep

@@ -1,0 +1,12 @@
+<?php
+
+namespace BrizyDeploy\Http;
+
+interface ResponseInterface
+{
+    public function sendHeaders();
+
+    public function sendContent();
+
+    public function send();
+}
