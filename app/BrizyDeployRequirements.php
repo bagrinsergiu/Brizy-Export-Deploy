@@ -387,6 +387,18 @@ class BrizyDeployRequirements extends RequirementCollection
         );
 
         $this->addRequirement(
+            extension_loaded('curl'),
+            'curl extension should be available',
+            'Install and enable the <strong>curl</strong> extension.'
+        );
+
+        $this->addRequirement(
+            extension_loaded('json'),
+            'json extension should be available',
+            'Install and enable the <strong>json</strong> extension.'
+        );
+
+        $this->addRequirement(
             is_writable(__DIR__ . '/../cache/'),
             'cache/ directory must be writable',
             'Change the permissions of either "<strong>cache/</strong>" directory so that the web server can write into it.'

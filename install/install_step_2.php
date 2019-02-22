@@ -1,12 +1,17 @@
 <?php
 
 use BrizyDeploy\App;
-use BrizyDeploy\Filesystem;
 use BrizyDeploy\Deploy;
 use BrizyDeploy\Exception\AppException;
 use BrizyDeploy\Http\Response;
 
-require __DIR__ . '/../autoload.php';
+$composerAutoload = __DIR__ . '/../vendor/autoload.php';
+if (!file_exists($composerAutoload)) {
+    echo "The 'vendor' folder is missing. You must run 'composer update' to resolve application dependencies.\nPlease see the README for more information.\n";
+    exit;
+}
+
+require $composerAutoload;
 
 try {
     $app = new App();
@@ -20,13 +25,6 @@ if ($app->isInstalled() === true) {
     header("Location: http://{$_SERVER['HTTP_HOST']}");
     exit;
 }
-
-//@todo create reserve copy, etc.
-$filesystem = new Filesystem();
-$filesystem->deleteFilesByPattern([
-    __DIR__.'/../cache/*',
-    __DIR__.'/../cache/img/*'
-]);
 
 $deploy = new Deploy();
 $deploy->execute();

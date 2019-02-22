@@ -2,6 +2,9 @@
 
 namespace BrizyDeploy;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Stream\Stream;
+
 class Deploy implements DeployInterface
 {
     /**
@@ -16,7 +19,8 @@ class Deploy implements DeployInterface
      */
     public function execute()
     {
-        $zip = zip_open($this->getZipPath());
+        $zip_path = $this->getZipPath();
+        $zip = zip_open($zip_path);
         if (!is_resource($zip)) {
             $this->errors['general'][] = 'Invalid zip resource';
             $this->is_succeeded = false;
@@ -38,11 +42,34 @@ class Deploy implements DeployInterface
         if (count($this->errors) > 0) {
             $this->is_succeeded = false;
         }
+
+        unlink($zip_path);
     }
 
+    /**
+     * @return string
+     */
     protected function getZipPath()
     {
-        return '/home/andrei/Desktop/dbcdf348d69a85ff0b5a9b002e360fa5/cache.zip';
+        $zip_name = __DIR__ . '/../../var/brizy-' . time() . '.zip';
+        $resource = fopen($zip_name, 'w');
+        $stream = Stream::factory($resource);
+        $client = new Client();
+
+        $response = $client->get('http://www.brizy-cloud.com/projects/65/export', ['save_to' => $stream]);
+        if ($response->getStatusCode() != 200) {
+            $this->errors['general'][] = 'Zip was not downloaded';
+            return null;
+        }
+
+        //@todo create reserve copy, etc.
+        $filesystem = new Filesystem();
+        $filesystem->deleteFilesByPattern([
+            __DIR__.'/../cache/*',
+            __DIR__.'/../cache/img/*'
+        ]);
+
+        return $zip_name;
     }
 
     /**
