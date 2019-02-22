@@ -3,7 +3,6 @@
 use BrizyDeploy\App;
 use BrizyDeploy\Filesystem;
 use BrizyDeploy\Deploy;
-use BrizyDeploy\Utils\HttpUtils;
 use BrizyDeploy\Exception\AppException;
 use BrizyDeploy\Http\Response;
 
@@ -33,8 +32,11 @@ $deploy = new Deploy();
 $deploy->execute();
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();
-    header(HttpUtils::getHttpStatus(400));
-    var_dump($errors);
+    $response = new Response(json_encode($errors), 400);
+    $response->setHeaders([
+        'Content-Type' => 'application/json'
+    ]);
+    $response->send();
     exit;
 }
 
