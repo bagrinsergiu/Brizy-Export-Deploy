@@ -9,4 +9,6 @@ interface ResponseInterface
     public function sendContent();
 
     public function send();
+
+    public function setHeaders(array $headers);
 }

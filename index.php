@@ -15,7 +15,7 @@ try {
 }
 
 if ($app->isInstalled() === true) {
-    $html = file_get_contents('cache/page.html');
+    $html = file_get_contents(__DIR__ . '/cache/page.html');
     $response = new Response($html, 200);
     $response->send();
 } else {

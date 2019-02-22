@@ -167,9 +167,18 @@ class Response implements ResponseInterface
             return $this;
         }
 
+        foreach ($this->headers as $name => $value) {
+            header($name.': '.$value, true, $this->statusCode);
+        }
+
         header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
 
         return $this;
+    }
+
+    public function setHeaders(array $headers)
+    {
+        $this->headers = $headers;
     }
 
     public function sendContent()
