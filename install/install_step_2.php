@@ -5,14 +5,15 @@ use BrizyDeploy\Filesystem;
 use BrizyDeploy\Deploy;
 use BrizyDeploy\Utils\HttpUtils;
 use BrizyDeploy\Exception\AppException;
+use BrizyDeploy\Http\Response;
 
 require __DIR__ . '/../autoload.php';
 
 try {
     $app = new App();
 } catch (AppException $e) {
-    header(HttpUtils::getHttpStatus(500));
-    echo $e->getMessage();
+    $response = new Response($e->getMessage(), 500);
+    $response->send();
     exit;
 }
 
