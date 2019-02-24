@@ -3,6 +3,7 @@
 use BrizyDeploy\App;
 use BrizyDeploy\Exception\AppException;
 use BrizyDeploy\Http\Response;
+use BrizyDeploy\Http\RedirectResponse;
 
 $composerAutoload = __DIR__ . '/vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -25,10 +26,14 @@ if ($app->isInstalled() === true) {
     $response = new Response($html, 200);
     $response->send();
 } else {
-    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-    header("Cache-Control: post-check=0, pre-check=0", false);
-    header("Pragma: no-cache");
-    header("Location: http://{$_SERVER['HTTP_HOST']}/install/install_step_1.php");
+    $targetUrl = "http://{$_SERVER['HTTP_HOST']}/install/install_step_1.php";
+    $response = new RedirectResponse($targetUrl);
+    $response
+        ->addHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+        ->addHeader('Cache-Control', 'post-check=0, pre-check=0')
+        ->addHeader('Pragma', 'no-cache');
+
+    $response->send();
 }
 
 exit;

@@ -167,11 +167,23 @@ class Response implements ResponseInterface
             return $this;
         }
 
-        foreach ($this->headers as $name => $value) {
-            header($name.': '.$value, true, $this->statusCode);
+        foreach ($this->headers as $row) {
+            foreach ($row as $name => $value) {
+                $replace = 0 === strcasecmp($name, 'Content-Type');
+                header($name.': '.$value, $replace, $this->statusCode);
+            }
         }
 
         header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
+
+        return $this;
+    }
+
+    public function addHeader($name, $value)
+    {
+        end($this->headers);
+        $key = key($this->headers);
+        $this->headers[$key + 1] = [$name => $value];
 
         return $this;
     }

@@ -4,6 +4,7 @@ use BrizyDeploy\App;
 use BrizyDeploy\Deploy;
 use BrizyDeploy\Exception\AppException;
 use BrizyDeploy\Http\Response;
+use BrizyDeploy\Http\RedirectResponse;
 
 $composerAutoload = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -22,7 +23,8 @@ try {
 }
 
 if ($app->isInstalled() === true) {
-    header("Location: http://{$_SERVER['HTTP_HOST']}");
+    $response = new RedirectResponse("http://{$_SERVER['HTTP_HOST']}");
+    $response->send();
     exit;
 }
 
@@ -31,9 +33,9 @@ $deploy->execute();
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();
     $response = new Response(json_encode($errors), 400);
-    $response->setHeaders([
+    $response->setHeaders([[
         'Content-Type' => 'application/json'
-    ]);
+    ]]);
     $response->send();
     exit;
 }
@@ -41,5 +43,6 @@ if (!$deploy->isSucceeded()) {
 $app->setIsInstalled(true);
 $app->saveConfig();
 
-header("Location: http://{$_SERVER['HTTP_HOST']}");
+$response = new RedirectResponse("http://{$_SERVER['HTTP_HOST']}");
+$response->send();
 exit;

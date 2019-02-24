@@ -19,9 +19,9 @@ $deploy->execute();
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();
     $response = new Response(json_encode($errors), 400);
-    $response->setHeaders([
+    $response->setHeaders([[
         'Content-Type' => 'application/json'
-    ]);
+    ]]);
     $response->send();
     exit;
 }
