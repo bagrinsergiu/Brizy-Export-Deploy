@@ -26,7 +26,7 @@ if ($app->isInstalled() === true) {
     $response = new Response($html, 200);
     $response->send();
 } else {
-    $targetUrl = "http://{$_SERVER['HTTP_HOST']}/install/install_step_1.php";
+    $targetUrl = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/install/install_step_1.php";
     $response = new RedirectResponse($targetUrl);
     $response
         ->addHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')

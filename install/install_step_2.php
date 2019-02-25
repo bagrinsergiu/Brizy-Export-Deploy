@@ -23,7 +23,7 @@ try {
 }
 
 if ($app->isInstalled() === true) {
-    $response = new RedirectResponse("http://{$_SERVER['HTTP_HOST']}");
+    $response = new RedirectResponse("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}");
     $response->send();
     exit;
 }
@@ -43,6 +43,6 @@ if (!$deploy->isSucceeded()) {
 $app->setIsInstalled(true);
 $app->saveConfig();
 
-$response = new RedirectResponse("http://{$_SERVER['HTTP_HOST']}");
+$response = new RedirectResponse("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}");
 $response->send();
 exit;
