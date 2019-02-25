@@ -56,6 +56,8 @@ class Deploy implements DeployInterface
         zip_close($zip);
 
         if (count($this->errors) > 0) {
+            //restore cache from revision
+            Filesystem::copyDirectory(__DIR__ . '/../../var/cache_revision',__DIR__ . '/../../var/cache');
             $this->is_succeeded = false;
         }
 
@@ -81,11 +83,12 @@ class Deploy implements DeployInterface
             return null;
         }
 
-        //@todo create reserve copy, etc.
-        $filesystem = new Filesystem();
-        $filesystem->deleteFilesByPattern([
-            __DIR__ . '/../cache/*',
-            __DIR__ . '/../cache/img/*'
+        //create revision
+        Filesystem::copyDirectory(__DIR__ . '/../../var/cache', __DIR__ . '/../../var/cache_revision');
+        //clear cache
+        Filesystem::deleteFilesByPattern([
+            __DIR__ . '/../../var/cache/*',
+            __DIR__ . '/../../var/cache/img/*'
         ]);
 
         return $zip_name;

@@ -7,7 +7,12 @@ interface FilesystemInterface
     /**
      * @param array $patterns
      */
-    public function deleteFilesByPattern(array $patterns);
+    static public function deleteFilesByPattern(array $patterns);
 
-//    public function createReserveCopy();
+    /**
+     * @param $src
+     * @param $dst
+     * @return mixed
+     */
+    static public function copyDirectory($src, $dst);
 }
