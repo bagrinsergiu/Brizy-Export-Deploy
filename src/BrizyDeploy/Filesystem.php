@@ -34,4 +34,20 @@ class Filesystem implements FilesystemInterface
         }
         closedir($dir);
     }
+
+    static function recursiveRemoveDir($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir . "/" . $object))
+                        self::recursiveRemoveDir($dir . "/" . $object);
+                    else
+                        unlink($dir . "/" . $object);
+                }
+            }
+            rmdir($dir);
+        }
+    }
 }
