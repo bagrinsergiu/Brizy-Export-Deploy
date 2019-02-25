@@ -107,4 +107,29 @@ class App implements AppInterface
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getProjectHashId()
+    {
+        if (isset($this->config['project_hash_id'])) {
+            return $this->config['project_hash_id'];
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $project_hash_id
+     * @return $this
+     */
+    public function setProjectHashId($project_hash_id)
+    {
+        if (isset($this->config['project_hash_id'])) {
+            $this->config['project_hash_id'] = $project_hash_id;
+        }
+
+        return $this;
+    }
 }

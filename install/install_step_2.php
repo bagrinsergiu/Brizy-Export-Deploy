@@ -20,8 +20,16 @@ if ($app->isInstalled() === true) {
     exit;
 }
 
-$deploy = new Deploy($app->getBrizyCloudUrl());
-$deploy->execute();
+$deploy = new Deploy($app->getBrizyCloudUrl(), $app->getProjectHashId());
+
+try {
+    $deploy->execute();
+} catch (\Exception $e) {
+    $response = new Response($e->getMessage()." in ".$e->getFile(), 500);
+    $response->send();
+    exit;
+}
+
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();
     $response = new Response(json_encode($errors), 400);

@@ -15,11 +15,20 @@ require $composerAutoload;
 $app = new App();
 if ($app->isInstalled() === false) {
     $response = new Response('App was not installed.', 500);
+    $response->send();
     exit;
 }
 
-$deploy = new Deploy($app->getBrizyCloudUrl());
-$deploy->execute();
+$deploy = new Deploy($app->getBrizyCloudUrl(), $app->getProjectHashId());
+
+try {
+    $deploy->execute();
+} catch (\Exception $e) {
+    $response = new Response($e->getMessage(), 500);
+    $response->send();
+    exit;
+}
+
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();
     $response = new Response(json_encode($errors), 400);
