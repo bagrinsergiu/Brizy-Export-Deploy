@@ -2,7 +2,6 @@
 
 use BrizyDeploy\App;
 use BrizyDeploy\Deploy;
-use BrizyDeploy\Exception\AppException;
 use BrizyDeploy\Http\Response;
 use BrizyDeploy\Http\RedirectResponse;
 
@@ -14,21 +13,14 @@ if (!file_exists($composerAutoload)) {
 
 require $composerAutoload;
 
-try {
-    $app = new App();
-} catch (AppException $e) {
-    $response = new Response($e->getMessage(), 500);
-    $response->send();
-    exit;
-}
-
+$app = new App();
 if ($app->isInstalled() === true) {
     $response = new RedirectResponse("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}");
     $response->send();
     exit;
 }
 
-$deploy = new Deploy();
+$deploy = new Deploy($app->getBrizyCloudUrl());
 $deploy->execute();
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();

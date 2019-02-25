@@ -15,7 +15,7 @@ if ($hasMajorProblems || $hasMinorProblems) {
     exit;
 } else {
     if (!is_file(__DIR__ . '/../var/config.json')) {
-        copy(__DIR__ . '/../config.json.dist', __DIR__ . '/../var/config.json');
+        $r = copy(__DIR__ . '/../config.json.dist', __DIR__ . '/../var/config.json');
     }
     header("Location: {$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/install/install_step_2.php");
     exit;

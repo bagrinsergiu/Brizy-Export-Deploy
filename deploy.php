@@ -1,10 +1,8 @@
 <?php
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', 1);
-
 use BrizyDeploy\Http\Response;
 use BrizyDeploy\Deploy;
+use BrizyDeploy\App;
 
 $composerAutoload = __DIR__ . '/vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -14,7 +12,13 @@ if (!file_exists($composerAutoload)) {
 
 require $composerAutoload;
 
-$deploy = new Deploy();
+$app = new App();
+if ($app->isInstalled() === false) {
+    $response = new Response('App was not installed.', 500);
+    exit;
+}
+
+$deploy = new Deploy($app->getBrizyCloudUrl());
 $deploy->execute();
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();

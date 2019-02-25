@@ -12,7 +12,20 @@ class Deploy implements DeployInterface
      */
     protected $errors = array();
 
+    /**
+     * @var bool
+     */
     protected $is_succeeded = true;
+
+    /**
+     * @var string
+     */
+    protected $brizy_cloud_url;
+
+    public function __construct($brizy_cloud_url)
+    {
+        $this->brizy_cloud_url = $brizy_cloud_url;
+    }
 
     /**
      * @todo create param $project_hash_id
@@ -30,7 +43,7 @@ class Deploy implements DeployInterface
             $name = zip_entry_name($zip_entry);
             if (!preg_match("/\/$/", $name)) {
                 $asset_content = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-                $bytes = file_put_contents(__DIR__ . '/../../' . $name, $asset_content);
+                $bytes = file_put_contents(__DIR__ . '/../../var/' . $name, $asset_content);
                 if ($bytes === false) {
                     $this->errors['files'][] = $name;
                 }
@@ -56,7 +69,7 @@ class Deploy implements DeployInterface
         $stream = Stream::factory($resource);
         $client = new Client();
 
-        $response = $client->get('http://www.brizy-cloud.com/projects/65/export', ['save_to' => $stream]);
+        $response = $client->get($this->brizy_cloud_url.'/projects/65/export', ['save_to' => $stream]);
         if ($response->getStatusCode() != 200) {
             $this->errors['general'][] = 'Zip was not downloaded';
             return null;

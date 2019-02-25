@@ -1,7 +1,6 @@
 <?php
 
 use BrizyDeploy\App;
-use BrizyDeploy\Exception\AppException;
 use BrizyDeploy\Http\Response;
 use BrizyDeploy\Http\RedirectResponse;
 
@@ -13,16 +12,9 @@ if (!file_exists($composerAutoload)) {
 
 require $composerAutoload;
 
-try {
-    $app = new App();
-} catch (AppException $e) {
-    $response = new Response($e->getMessage(), 500);
-    $response->send();
-    exit;
-}
-
+$app = new App();
 if ($app->isInstalled() === true) {
-    $html = file_get_contents(__DIR__ . '/cache/page.html');
+    $html = file_get_contents(__DIR__ . '/var/cache/page.html');
     $response = new Response($html, 200);
     $response->send();
 } else {

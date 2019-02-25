@@ -2,8 +2,6 @@
 
 namespace BrizyDeploy;
 
-use BrizyDeploy\Exception\AppException;
-
 class App implements AppInterface
 {
     /**
@@ -18,7 +16,6 @@ class App implements AppInterface
 
     /**
      * App constructor.
-     * @throws AppException
      */
     public function __construct()
     {
@@ -28,14 +25,16 @@ class App implements AppInterface
 
     /**
      * @return array
-     * @throws AppException
      */
     protected function toArrayConfig()
     {
         $config = file_get_contents($this->config_path);
+        if (!$config) {
+            return [];
+        }
         $config = json_decode($config, true);
         if (!$config) {
-            throw new AppException('Invalid config file');
+            return [];
         }
 
         return $config;
@@ -79,6 +78,31 @@ class App implements AppInterface
     {
         if (isset($this->config['installed'])) {
             $this->config['installed'] = (bool)$is_installed;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBrizyCloudUrl()
+    {
+        if (isset($this->config['brizy_cloud_url'])) {
+            return $this->config['brizy_cloud_url'];
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $brizy_cloud_url
+     * @return $this
+     */
+    public function setBrizyCloudUrl($brizy_cloud_url)
+    {
+        if (isset($this->config['brizy_cloud_url'])) {
+            $this->config['brizy_cloud_url'] = $brizy_cloud_url;
         }
 
         return $this;
