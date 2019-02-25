@@ -6,7 +6,10 @@ use BrizyDeploy\Exception\AppException;
 
 class App implements AppInterface
 {
-    const CONFIG_PATH = __DIR__ . '/../../var/config.json';
+    /**
+     * @var string
+     */
+    protected $config_path;
 
     /**
      * @var array
@@ -19,6 +22,7 @@ class App implements AppInterface
      */
     public function __construct()
     {
+        $this->config_path = __DIR__ . '/../../var/config.json';
         $this->config = $this->toArrayConfig();
     }
 
@@ -28,7 +32,7 @@ class App implements AppInterface
      */
     protected function toArrayConfig()
     {
-        $config = file_get_contents(self::CONFIG_PATH);
+        $config = file_get_contents($this->config_path);
         $config = json_decode($config, true);
         if (!$config) {
             throw new AppException('Invalid config file');
@@ -50,7 +54,7 @@ class App implements AppInterface
      */
     public function saveConfig()
     {
-        file_put_contents(self::CONFIG_PATH, json_encode($this->config));
+        file_put_contents($this->config_path, json_encode($this->config));
 
         return $this;
     }
