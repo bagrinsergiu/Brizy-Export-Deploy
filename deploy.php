@@ -1,6 +1,7 @@
 <?php
 
-use BrizyDeploy\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use BrizyDeploy\Deploy;
 use BrizyDeploy\App;
 
@@ -31,10 +32,7 @@ try {
 
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();
-    $response = new Response(json_encode($errors), 400);
-    $response->setHeaders([[
-        'Content-Type' => 'application/json'
-    ]]);
+    $response = new JsonResponse(json_encode($errors), 400);
     $response->send();
     exit;
 }

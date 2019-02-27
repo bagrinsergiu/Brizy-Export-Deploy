@@ -50,4 +50,14 @@ class Filesystem implements FilesystemInterface
             rmdir($dir);
         }
     }
+
+    static function fileExists($file)
+    {
+        return is_file($file);
+    }
+
+    static function copyFile($source, $dest)
+    {
+        copy($source, $dest);
+    }
 }

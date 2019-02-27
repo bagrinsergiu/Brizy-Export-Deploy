@@ -15,4 +15,17 @@ interface FilesystemInterface
      * @return mixed
      */
     static public function copyDirectory($src, $dst);
+
+    /**
+     * @param $file
+     * @return mixed
+     */
+    static function fileExists($file);
+
+    /**
+     * @param $source
+     * @param $dest
+     * @return mixed
+     */
+    static function copyFile($source, $dest);
 }

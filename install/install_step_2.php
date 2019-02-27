@@ -2,8 +2,9 @@
 
 use BrizyDeploy\App;
 use BrizyDeploy\Deploy;
-use BrizyDeploy\Http\Response;
-use BrizyDeploy\Http\RedirectResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 $composerAutoload = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -32,10 +33,7 @@ try {
 
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();
-    $response = new Response(json_encode($errors), 400);
-    $response->setHeaders([[
-        'Content-Type' => 'application/json'
-    ]]);
+    $response = new JsonResponse(json_encode($errors), 400);
     $response->send();
     exit;
 }
