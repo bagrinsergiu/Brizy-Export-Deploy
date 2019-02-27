@@ -1,6 +1,5 @@
 <?php
 
-use BrizyDeploy\App;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,9 +13,11 @@ if (!file_exists($composerAutoload)) {
 
 require $composerAutoload;
 
+require_once __DIR__ . '/app/AppKernel.php';
+
 $request = Request::createFromGlobals();
 
-$app = new App();
+$app = new AppKernel();
 if ($app->isInstalled() === true) {
     $html = file_get_contents(__DIR__ . '/var/cache/page.html');
     $response = new Response($html, 200);

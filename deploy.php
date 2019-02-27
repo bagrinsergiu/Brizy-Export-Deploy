@@ -3,7 +3,6 @@
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use BrizyDeploy\Deploy;
-use BrizyDeploy\App;
 
 $composerAutoload = __DIR__ . '/vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -13,7 +12,9 @@ if (!file_exists($composerAutoload)) {
 
 require $composerAutoload;
 
-$app = new App();
+require_once __DIR__ . '/app/AppKernel.php';
+
+$app = new AppKernel();
 if ($app->isInstalled() === false) {
     $response = new Response('App was not installed.', 500);
     $response->send();

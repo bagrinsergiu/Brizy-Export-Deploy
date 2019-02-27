@@ -1,13 +1,16 @@
 <?php
 
-namespace BrizyDeploy;
-
-class App implements AppInterface
+class AppKernel
 {
     /**
      * @var string
      */
     protected $config_path;
+
+    /**
+     * @var string
+     */
+    protected $config_path_dist;
 
     /**
      * @var array
@@ -19,7 +22,8 @@ class App implements AppInterface
      */
     public function __construct()
     {
-        $this->config_path = __DIR__ . '/../../var/config.json';
+        $this->config_path = __DIR__ . '/../var/config.json';
+        $this->config_path_dist = __DIR__ . '/../app/config/config.json.dist';
         $this->config = $this->toArrayConfig();
     }
 
@@ -56,6 +60,18 @@ class App implements AppInterface
         file_put_contents($this->config_path, json_encode($this->config));
 
         return $this;
+    }
+
+    public function initConfig()
+    {
+        if (!$this->isInitConfig()) {
+            copy($this->config_path_dist, $this->config_path);
+        }
+    }
+
+    public function isInitConfig()
+    {
+        return is_file($this->config_path);
     }
 
     /**

@@ -1,6 +1,5 @@
 <?php
 
-use BrizyDeploy\App;
 use BrizyDeploy\Deploy;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,9 +15,11 @@ if (!file_exists($composerAutoload)) {
 
 require $composerAutoload;
 
+require_once __DIR__ . '/../app/AppKernel.php';
+
 $request = Request::createFromGlobals();
 
-$app = new App();
+$app = new AppKernel();
 if ($app->isInstalled() === true) {
     $response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', ''));
     $response->send();
