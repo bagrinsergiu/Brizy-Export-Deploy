@@ -28,4 +28,10 @@ interface FilesystemInterface
      * @return mixed
      */
     static function copyFile($source, $dest);
+
+    /**
+     * @param $file
+     * @return mixed
+     */
+    static public function removeFile($file);
 }
