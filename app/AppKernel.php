@@ -62,14 +62,14 @@ class AppKernel
         return $this;
     }
 
-    public function initConfig()
+    public function init()
     {
-        if (!$this->isInitConfig()) {
+        if (!$this->isInit()) {
             copy($this->config_path_dist, $this->config_path);
         }
     }
 
-    public function isInitConfig()
+    public function isInit()
     {
         return is_file($this->config_path);
     }
