@@ -62,7 +62,7 @@ class Deploy implements DeployInterface
         }
 
         Filesystem::recursiveRemoveDir(__DIR__ . '/../../var/cache_revision');
-        unlink($zip_path);
+        Filesystem::removeFile($zip_path);
     }
 
     /**

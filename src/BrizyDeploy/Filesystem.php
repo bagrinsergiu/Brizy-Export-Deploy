@@ -60,4 +60,9 @@ class Filesystem implements FilesystemInterface
     {
         copy($source, $dest);
     }
+
+    static public function removeFile($file)
+    {
+        unlink($file);
+    }
 }
