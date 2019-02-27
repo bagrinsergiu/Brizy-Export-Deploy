@@ -23,7 +23,11 @@ if ($appKernel->isInstalled() === true) {
     $response = new Response($html, 200);
     $response->send();
 } else {
-    $response = new RedirectResponse(HttpUtils::getBaseUrl($request, '', '/install/install_step_1.php'));
+    $response = new RedirectResponse(HttpUtils::getBaseUrl(
+        $request,
+        '',
+        '/install/install_step_1.php'
+    ));
     $response->setPrivate();
     $response->setMaxAge(0);
     $response->headers->addCacheControlDirective('must-revalidate', true);

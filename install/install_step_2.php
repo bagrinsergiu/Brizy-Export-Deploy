@@ -21,7 +21,11 @@ $request = Request::createFromGlobals();
 
 $appKernel = new AppKernel();
 if ($appKernel->isInstalled() === true) {
-    $response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', ''));
+    $response = new RedirectResponse(HttpUtils::getBaseUrl(
+        $request,
+        '/install/install_step_2.php',
+        ''
+    ));
     $response->send();
     exit;
 }
@@ -31,7 +35,7 @@ $deploy = new Deploy($appKernel->getDeployUrl(), $appKernel->getAppId());
 try {
     $deploy->execute();
 } catch (\Exception $e) {
-    $response = new Response($e->getMessage()." in ".$e->getFile(), 500);
+    $response = new Response($e->getMessage() . " in " . $e->getFile(), 500);
     $response->send();
     exit;
 }
@@ -46,6 +50,10 @@ if (!$deploy->isSucceeded()) {
 $appKernel->setIsInstalled(true);
 $appKernel->saveConfig();
 
-$response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', ''));
+$response = new RedirectResponse(HttpUtils::getBaseUrl(
+    $request,
+    '/install/install_step_2.php',
+    ''
+));
 $response->send();
 exit;

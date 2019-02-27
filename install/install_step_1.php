@@ -19,7 +19,11 @@ require_once __DIR__ . '/../app/AppKernel.php';
 $appKernel = new AppKernel();
 $appKernel->init();
 
-$response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_1.php', '/install/install_step_2.php'));
+$response = new RedirectResponse(HttpUtils::getBaseUrl(
+    $request,
+    '/install/install_step_1.php',
+    '/install/install_step_2.php'
+));
 $response->send();
 
 exit;

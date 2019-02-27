@@ -57,7 +57,7 @@ class Deploy implements DeployInterface
 
         if (count($this->errors) > 0) {
             //restore cache from revision
-            Filesystem::copyDirectory(__DIR__ . '/../../var/cache_revision',__DIR__ . '/../../var/cache');
+            Filesystem::copyDirectory(__DIR__ . '/../../var/cache_revision', __DIR__ . '/../../var/cache');
             $this->is_succeeded = false;
         }
 
