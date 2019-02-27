@@ -5,6 +5,8 @@ use BrizyDeploy\Deploy;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use BrizyDeploy\Utils\HttpUtils;
 
 $composerAutoload = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -14,9 +16,11 @@ if (!file_exists($composerAutoload)) {
 
 require $composerAutoload;
 
+$request = Request::createFromGlobals();
+
 $app = new App();
 if ($app->isInstalled() === true) {
-    $response = new RedirectResponse("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}");
+    $response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', '/'));
     $response->send();
     exit;
 }
@@ -41,6 +45,6 @@ if (!$deploy->isSucceeded()) {
 $app->setIsInstalled(true);
 $app->saveConfig();
 
-$response = new RedirectResponse("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}");
+$response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', '/'));
 $response->send();
 exit;

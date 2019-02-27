@@ -3,6 +3,7 @@
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use BrizyDeploy\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use BrizyDeploy\Utils\HttpUtils;
 
 $composerAutoload = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -18,7 +19,7 @@ if (!Filesystem::fileExists(__DIR__ . '/../var/config.json')) {
     Filesystem::copyFile(__DIR__ . '/../app/config/config.json.dist', __DIR__ . '/../var/config.json');
 }
 
-$response = new RedirectResponse("{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}/install/install_step_2.php");
+$response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_1.php', '/install/install_step_2.php'));
 $response->send();
 
 exit;
