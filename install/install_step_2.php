@@ -20,7 +20,7 @@ $request = Request::createFromGlobals();
 
 $app = new App();
 if ($app->isInstalled() === true) {
-    $response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', '/'));
+    $response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', ''));
     $response->send();
     exit;
 }
@@ -45,6 +45,6 @@ if (!$deploy->isSucceeded()) {
 $app->setIsInstalled(true);
 $app->saveConfig();
 
-$response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', '/'));
+$response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', ''));
 $response->send();
 exit;
