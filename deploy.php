@@ -14,14 +14,14 @@ require $composerAutoload;
 
 require_once __DIR__ . '/app/AppKernel.php';
 
-$app = new AppKernel();
-if ($app->isInstalled() === false) {
+$appKernel = new AppKernel();
+if ($appKernel->isInstalled() === false) {
     $response = new Response('App was not installed.', 500);
     $response->send();
     exit;
 }
 
-$deploy = new Deploy($app->getBrizyCloudUrl(), $app->getProjectHashId());
+$deploy = new Deploy($appKernel->getBrizyCloudUrl(), $appKernel->getProjectHashId());
 
 try {
     $deploy->execute();

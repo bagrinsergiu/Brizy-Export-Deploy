@@ -16,8 +16,8 @@ $request = Request::createFromGlobals();
 
 require_once __DIR__ . '/../app/AppKernel.php';
 
-$app = new AppKernel();
-$app->init();
+$appKernel = new AppKernel();
+$appKernel->init();
 
 $response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_1.php', '/install/install_step_2.php'));
 $response->send();

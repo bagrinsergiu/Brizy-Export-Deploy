@@ -19,14 +19,14 @@ require_once __DIR__ . '/../app/AppKernel.php';
 
 $request = Request::createFromGlobals();
 
-$app = new AppKernel();
-if ($app->isInstalled() === true) {
+$appKernel = new AppKernel();
+if ($appKernel->isInstalled() === true) {
     $response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', ''));
     $response->send();
     exit;
 }
 
-$deploy = new Deploy($app->getBrizyCloudUrl(), $app->getProjectHashId());
+$deploy = new Deploy($appKernel->getBrizyCloudUrl(), $appKernel->getProjectHashId());
 
 try {
     $deploy->execute();
@@ -43,8 +43,8 @@ if (!$deploy->isSucceeded()) {
     exit;
 }
 
-$app->setIsInstalled(true);
-$app->saveConfig();
+$appKernel->setIsInstalled(true);
+$appKernel->saveConfig();
 
 $response = new RedirectResponse(HttpUtils::getBaseUrl($request, '/install/install_step_2.php', ''));
 $response->send();

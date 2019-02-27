@@ -17,8 +17,8 @@ require_once __DIR__ . '/app/AppKernel.php';
 
 $request = Request::createFromGlobals();
 
-$app = new AppKernel();
-if ($app->isInstalled() === true) {
+$appKernel = new AppKernel();
+if ($appKernel->isInstalled() === true) {
     $html = file_get_contents(__DIR__ . '/var/cache/page.html');
     $response = new Response($html, 200);
     $response->send();
