@@ -26,7 +26,7 @@ if ($appKernel->isInstalled() === true) {
     exit;
 }
 
-$deploy = new Deploy($appKernel->getBrizyCloudUrl(), $appKernel->getProjectHashId());
+$deploy = new Deploy($appKernel->getDeployUrl(), $appKernel->getAppId());
 
 try {
     $deploy->execute();

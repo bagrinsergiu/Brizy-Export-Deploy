@@ -102,23 +102,23 @@ class AppKernel
     /**
      * @return string
      */
-    public function getBrizyCloudUrl()
+    public function getDeployUrl()
     {
-        if (isset($this->config['brizy_cloud_url'])) {
-            return $this->config['brizy_cloud_url'];
+        if (isset($this->config['deploy_url'])) {
+            return $this->config['deploy_url'];
         }
 
         return '';
     }
 
     /**
-     * @param $brizy_cloud_url
+     * @param $deploy_url
      * @return $this
      */
-    public function setBrizyCloudUrl($brizy_cloud_url)
+    public function setDeployUrl($deploy_url)
     {
-        if (isset($this->config['brizy_cloud_url'])) {
-            $this->config['brizy_cloud_url'] = $brizy_cloud_url;
+        if (isset($this->config['deploy_url'])) {
+            $this->config['deploy_url'] = $deploy_url;
         }
 
         return $this;
@@ -127,23 +127,23 @@ class AppKernel
     /**
      * @return string
      */
-    public function getProjectHashId()
+    public function getAppId()
     {
-        if (isset($this->config['project_hash_id'])) {
-            return $this->config['project_hash_id'];
+        if (isset($this->config['app_id'])) {
+            return $this->config['app_id'];
         }
 
         return '';
     }
 
     /**
-     * @param $project_hash_id
+     * @param $app_id
      * @return $this
      */
-    public function setProjectHashId($project_hash_id)
+    public function setAppId($app_id)
     {
-        if (isset($this->config['project_hash_id'])) {
-            $this->config['project_hash_id'] = $project_hash_id;
+        if (isset($this->config['app_id'])) {
+            $this->config['app_id'] = $app_id;
         }
 
         return $this;
