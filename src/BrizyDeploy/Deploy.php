@@ -73,7 +73,12 @@ class Deploy implements DeployInterface
         $zip_name = __DIR__ . '/../../var/brizy-' . time() . '.zip';
         $resource = fopen($zip_name, 'w');
         $stream = Stream::factory($resource);
-        $client = new Client();
+        $client = new Client([
+            'defaults' => [
+                'exceptions' => false,
+                'verify' => false
+            ]
+        ]);
 
         $response = $client->get(
             $this->brizy_cloud_url . '/projects/' . $this->project_hash_id . '/export',
