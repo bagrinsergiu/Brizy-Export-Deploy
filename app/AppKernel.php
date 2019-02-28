@@ -66,6 +66,7 @@ class AppKernel
     {
         if (!$this->isInit()) {
             copy($this->config_path_dist, $this->config_path);
+            $this->config = $this->toArrayConfig();
         }
     }
 
