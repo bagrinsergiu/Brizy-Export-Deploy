@@ -32,7 +32,7 @@ class AppKernel
      */
     protected function toArrayConfig()
     {
-        $config = file_get_contents($this->config_path);
+        $config = @file_get_contents($this->config_path);
         if (!$config) {
             return [];
         }

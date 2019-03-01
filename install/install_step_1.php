@@ -31,9 +31,9 @@ $response = $client->post($url, [
 ]);
 
 if ($response->getStatusCode() != 200) {
-    $response = new Response($response->getBody()->getContents());
-    $response->send();
-    exit;
+//    $response = new Response($response->getBody()->getContents());
+//    $response->send();
+//    exit;
 }
 
 $response = new RedirectResponse(HttpUtils::getBaseUrl(
