@@ -2,6 +2,7 @@
 
 namespace BrizyDeploy\Utils;
 
+use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\Request;
 
 class HttpUtils
@@ -21,5 +22,15 @@ class HttpUtils
         }
 
         return $baseUrl;
+    }
+
+    static public function getHttpClient()
+    {
+        return new Client([
+            'defaults' => [
+                'exceptions' => false,
+                'verify' => __DIR__ . '/../../../app/certificates/ca-bundle.crt'
+            ]
+        ]);
     }
 }

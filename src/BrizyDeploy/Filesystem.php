@@ -22,6 +22,10 @@ class Filesystem implements FilesystemInterface
     static public function copyDirectory($src, $dst)
     {
         $dir = opendir($src);
+        if ($dir === false) {
+            return false;
+        }
+
         @mkdir($dst);
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..')) {
@@ -33,6 +37,8 @@ class Filesystem implements FilesystemInterface
             }
         }
         closedir($dir);
+
+        return true;
     }
 
     static function recursiveRemoveDir($dir)

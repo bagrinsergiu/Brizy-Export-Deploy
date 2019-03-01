@@ -42,7 +42,7 @@ try {
 
 if (!$deploy->isSucceeded()) {
     $errors = $deploy->getErrors();
-    $response = new JsonResponse(json_encode($errors), 400);
+    $response = new JsonResponse($errors, 400);
     $response->send();
     exit;
 }

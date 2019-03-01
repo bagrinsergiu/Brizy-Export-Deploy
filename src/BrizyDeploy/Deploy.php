@@ -2,7 +2,7 @@
 
 namespace BrizyDeploy;
 
-use GuzzleHttp\Client;
+use BrizyDeploy\Utils\HttpUtils;
 use GuzzleHttp\Stream\Stream;
 
 class Deploy implements DeployInterface
@@ -33,12 +33,12 @@ class Deploy implements DeployInterface
         $this->project_hash_id = $project_hash_id;
     }
 
-    public function execute()
+    protected function innerExecute()
     {
         $zip_path = $this->getZipPath();
         $zip = zip_open($zip_path);
         if (!is_resource($zip)) {
-            $this->errors['general'][] = 'Invalid zip resource';
+            $this->errors['error'][] = 'Invalid zip resource';
             $this->is_succeeded = false;
         }
 
@@ -55,6 +55,26 @@ class Deploy implements DeployInterface
 
         zip_close($zip);
 
+        Filesystem::removeFile($zip_path);
+    }
+
+    public function execute()
+    {
+        //create revision
+        Filesystem::copyDirectory(__DIR__ . '/../../var/cache', __DIR__ . '/../../var/cache_revision');
+
+        //clear cache
+        Filesystem::deleteFilesByPattern([
+            __DIR__ . '/../../var/cache/*',
+            __DIR__ . '/../../var/cache/img/*'
+        ]);
+
+        try {
+            $this->innerExecute();
+        } catch (\Exception $e) {
+            $this->errors['critical'][] = $e->getMessage();
+        }
+
         if (count($this->errors) > 0) {
             //restore cache from revision
             Filesystem::copyDirectory(__DIR__ . '/../../var/cache_revision', __DIR__ . '/../../var/cache');
@@ -62,7 +82,6 @@ class Deploy implements DeployInterface
         }
 
         Filesystem::recursiveRemoveDir(__DIR__ . '/../../var/cache_revision');
-        Filesystem::removeFile($zip_path);
     }
 
     /**
@@ -73,29 +92,16 @@ class Deploy implements DeployInterface
         $zip_name = __DIR__ . '/../../var/brizy-' . time() . '.zip';
         $resource = fopen($zip_name, 'w');
         $stream = Stream::factory($resource);
-        $client = new Client([
-            'defaults' => [
-                'exceptions' => false,
-                'verify' => __DIR__ . '/../../app/certificates/ca-bundle.crt'
-            ]
-        ]);
+        $client = HttpUtils::getHttpClient();
 
         $response = $client->get(
             $this->brizy_cloud_url . '/projects/' . $this->project_hash_id . '/export',
             ['save_to' => $stream]
         );
         if ($response->getStatusCode() != 200) {
-            $this->errors['general'][] = 'Zip was not downloaded';
+            $this->errors['error'][] = 'Zip was not downloaded';
             return null;
         }
-
-        //create revision
-        Filesystem::copyDirectory(__DIR__ . '/../../var/cache', __DIR__ . '/../../var/cache_revision');
-        //clear cache
-        Filesystem::deleteFilesByPattern([
-            __DIR__ . '/../../var/cache/*',
-            __DIR__ . '/../../var/cache/img/*'
-        ]);
 
         return $zip_name;
     }
