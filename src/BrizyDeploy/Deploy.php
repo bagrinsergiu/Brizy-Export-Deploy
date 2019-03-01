@@ -76,7 +76,7 @@ class Deploy implements DeployInterface
         $client = new Client([
             'defaults' => [
                 'exceptions' => false,
-                'verify' => false
+                'verify' => __DIR__ . '/../../app/certificates/ca-bundle.crt'
             ]
         ]);
 
