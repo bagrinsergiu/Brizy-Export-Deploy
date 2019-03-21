@@ -23,17 +23,19 @@ $appKernel->init();
 #test two-sided connection with remote server
 $client = HttpUtils::getHttpClient();
 $appUrl = HttpUtils::getBaseUrl($request, '/install/install_step_1.php', '/connect.php');
-$url = $appKernel->getDeployUrl() . '/projects/' . $appKernel->getAppId() . '/export/check-connection';
+$url = $appKernel->getDeployUrl() . '/export/check-connection';
 $response = $client->post($url, [
     'body' => [
-        'url' => $appUrl
+        'url' => $appUrl,
+        'project_uid' => $appKernel->getAppId(),
+        'is_localhost' => true
     ]
 ]);
 
 if ($response->getStatusCode() != 200) {
-//    $response = new Response($response->getBody()->getContents());
-//    $response->send();
-//    exit;
+    $response = new Response($response->getBody()->getContents());
+    $response->send();
+    exit;
 }
 
 $response = new RedirectResponse(HttpUtils::getBaseUrl(

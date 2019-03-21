@@ -19,7 +19,7 @@ $request = Request::createFromGlobals();
 
 $appKernel = new AppKernel();
 if ($appKernel->isInstalled() === true) {
-    $html = file_get_contents(__DIR__ . '/var/cache/page.html');
+    $html = file_get_contents(__DIR__ . '/var/page.html');
     $response = new Response($html, 200);
     $response->send();
 } else {
@@ -28,6 +28,7 @@ if ($appKernel->isInstalled() === true) {
         '',
         '/install/install_step_1.php'
     ));
+
     $response->setPrivate();
     $response->setMaxAge(0);
     $response->headers->addCacheControlDirective('must-revalidate', true);
