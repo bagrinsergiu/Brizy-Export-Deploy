@@ -32,7 +32,7 @@ $response = $client->post($url, [
         'base_url' => $baseUrl,
         'connect_url' => $connectUrl,
         'project_uid' => $appKernel->getAppId(),
-        'is_localhost' => 0 //$is_localhost
+        'is_localhost' => $is_localhost
     ]
 ]);
 
