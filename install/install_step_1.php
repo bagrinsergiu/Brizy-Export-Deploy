@@ -20,7 +20,7 @@ require_once __DIR__ . '/../app/AppKernel.php';
 $appKernel = new AppKernel();
 $appKernel->init();
 
-HttpUtils::getClientIP($request) == '127.0.0.1' ? $is_localhost = true : $is_localhost = false;
+HttpUtils::getClientIP($request) == '127.0.0.1' ? $is_localhost = 1 : $is_localhost = 0;
 
 #test two-sided connection with remote server
 $client = HttpUtils::getHttpClient();
@@ -32,7 +32,7 @@ $response = $client->post($url, [
         'base_url' => $baseUrl,
         'connect_url' => $connectUrl,
         'project_uid' => $appKernel->getAppId(),
-        'is_localhost' => false //$is_localhost
+        'is_localhost' => 0 //$is_localhost
     ]
 ]);
 
