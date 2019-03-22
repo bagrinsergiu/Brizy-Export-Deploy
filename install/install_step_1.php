@@ -20,20 +20,24 @@ require_once __DIR__ . '/../app/AppKernel.php';
 $appKernel = new AppKernel();
 $appKernel->init();
 
+HttpUtils::getClientIP($request) == '127.0.0.1' ? $is_localhost = true : $is_localhost = false;
+
 #test two-sided connection with remote server
 $client = HttpUtils::getHttpClient();
-$appUrl = HttpUtils::getBaseUrl($request, '/install/install_step_1.php', '/connect.php');
+$connectUrl = HttpUtils::getBaseUrl($request, '/install/install_step_1.php', '/connect.php');
+$baseUrl = HttpUtils::getBaseUrl($request, '/install/install_step_1.php', '');
 $url = $appKernel->getDeployUrl() . '/export/check-connection';
 $response = $client->post($url, [
     'body' => [
-        'url' => $appUrl,
+        'base_url' => $baseUrl,
+        'connect_url' => $connectUrl,
         'project_uid' => $appKernel->getAppId(),
-        'is_localhost' => true
+        'is_localhost' => false //$is_localhost
     ]
 ]);
 
 if ($response->getStatusCode() != 200) {
-    $response = new Response($response->getBody()->getContents());
+    $response = new Response('Connection error: ' . $response->getBody()->getContents());
     $response->send();
     exit;
 }
