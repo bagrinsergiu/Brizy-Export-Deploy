@@ -46,7 +46,7 @@ class Deploy implements DeployInterface
             $name = zip_entry_name($zip_entry);
             if (!preg_match("/\/$/", $name)) {
                 $asset_content = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-                $bytes = file_put_contents(__DIR__ . '/../../var/' . $name, $asset_content);
+                $bytes = file_put_contents(__DIR__ . '/../../' . $name, $asset_content);
                 if ($bytes === false) {
                     $this->errors['files'][] = $name;
                 }
