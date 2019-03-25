@@ -20,7 +20,11 @@ require_once __DIR__ . '/../app/AppKernel.php';
 $appKernel = new AppKernel();
 $appKernel->init();
 
-HttpUtils::getClientIP($request) == '127.0.0.1' ? $is_localhost = 1 : $is_localhost = 0;
+$clientIP = HttpUtils::getClientIP($request);
+$is_localhost = 0;
+if ($clientIP == '127.0.0.1' || $clientIP == '::1') {
+    $is_localhost = 1;
+}
 
 #test two-sided connection with remote server
 $client = HttpUtils::getHttpClient();
