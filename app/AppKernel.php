@@ -25,6 +25,8 @@ class AppKernel
         $this->config_path = __DIR__ . '/../var/config.json';
         $this->config_path_dist = __DIR__ . '/../app/config/config.json.dist';
         $this->config = $this->toArrayConfig();
+
+        ini_set('max_execution_time', 60);
     }
 
     /**
