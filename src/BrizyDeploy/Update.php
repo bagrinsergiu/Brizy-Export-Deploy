@@ -38,7 +38,7 @@ class Update implements UpdateInterface
         $this->backup_path = __DIR__ . '/../../var/backup.zip';
 
         ini_set('max_execution_time', 120);
-        ini_set('memory_limit','256M');
+        ini_set('memory_limit', '256M');
     }
 
     /**
@@ -92,12 +92,19 @@ class Update implements UpdateInterface
             return false;
         }
 
+        $existFiles = $this->getFilesByPath(realpath(__DIR__ . '/../../'));
+        $existFiles = $existFiles['files'];
+
         $result = true;
         while ($zip_entry = zip_read($zip)) {
             $name = zip_entry_name($zip_entry);
             if (!preg_match("/\/$/", $name)) {
                 $asset_content = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-                $name = __DIR__ . '/../../' . str_replace('brizy/', '', $name);
+                $name = realpath(__DIR__ . '/../../') . '/' . str_replace('brizy/', '', $name);
+
+                if ($key = array_search($name, $existFiles)) {
+                    unset($existFiles[$key]);
+                }
 
                 $dirname = dirname($name);
 
@@ -120,7 +127,55 @@ class Update implements UpdateInterface
 
         zip_close($zip);
 
+        var_dump($existFiles);
         return $result;
+    }
+
+    protected function readDir($dir)
+    {
+        $result = [];
+        if ($handle = opendir($dir)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry != "." && $entry != "..") {
+                    $result[] = $entry;
+                }
+            }
+            closedir($handle);
+        }
+
+        return $result;
+    }
+
+    protected function getFilesByPath($root)
+    {
+        $files = array('files' => array(), 'dirs' => array());
+        $directories = array();
+        $last_letter = $root[strlen($root) - 1];
+        $root = ($last_letter == '\\' || $last_letter == '/') ? $root : $root . DIRECTORY_SEPARATOR;
+
+        $directories[] = $root;
+
+        while (sizeof($directories)) {
+            $dir = array_pop($directories);
+            if ($handle = opendir($dir)) {
+                while (false !== ($file = readdir($handle))) {
+                    if ($file == '.' || $file == '..') {
+                        continue;
+                    }
+                    $file = $dir . $file;
+                    if (is_dir($file)) {
+                        $directory_path = $file . DIRECTORY_SEPARATOR;
+                        array_push($directories, $directory_path);
+                        $files['dirs'][] = $directory_path;
+                    } elseif (is_file($file)) {
+                        $files['files'][] = $file;
+                    }
+                }
+                closedir($handle);
+            }
+        }
+
+        return $files;
     }
 
     /**
