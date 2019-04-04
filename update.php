@@ -29,11 +29,21 @@ if ($hasMajorProblems || $hasMinorProblems) {
 
 $request = Request::createFromGlobals();
 
-$update = new Update('https://s3.amazonaws.com/bitblox-develop/brizy.zip');
+if (!$zip_url = $request->query->get('zip_url')) {
+    $response = new JsonResponse([
+        'success' => false,
+        'message' => 'zip_url is required'
+    ], 400);
+    $response->send();
+    exit;
+}
+
+$update = new Update($zip_url);
 $result = $update->execute();
 if ($result) {
     $response = new JsonResponse([
-        'success' => true
+        'success' => true,
+        'message' => 'Successfully updated'
     ], 200);
 } else {
     $response = new JsonResponse($update->getErrors(), 400);
