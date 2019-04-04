@@ -1,6 +1,5 @@
 <?php
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use BrizyDeploy\Update\Update;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,9 +22,7 @@ $hasMajorProblems = (bool) count($majorProblems);
 $hasMinorProblems = (bool) count($minorProblems);
 
 if ($hasMajorProblems || $hasMinorProblems) {
-    var_dump($majorProblems);
-    var_dump($minorProblems);
-    $response = new Response('Check Requirements', 400);
+    $response = new JsonResponse($majorProblems, 400);
     $response->send();
     exit;
 }
