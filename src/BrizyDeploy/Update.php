@@ -81,11 +81,11 @@ class Update implements UpdateInterface
                     $result = false;
                 }
 
-//                $bytes = file_put_contents($name, $asset_content);
-//                if ($bytes === false) {
-//                    $this->errors['error']['files'][] = $name;
-//                    $result = false;
-//                }
+                $bytes = file_put_contents($name, $asset_content);
+                if ($bytes === false) {
+                    $this->errors['error']['files'][] = $name;
+                    $result = false;
+                }
             }
         }
 
