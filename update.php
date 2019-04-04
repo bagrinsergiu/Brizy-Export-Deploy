@@ -2,7 +2,7 @@
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use BrizyDeploy\Update;
+use BrizyDeploy\Update\Update;
 
 require_once __DIR__ . '/app/BrizyDeployRequirements.php';
 
