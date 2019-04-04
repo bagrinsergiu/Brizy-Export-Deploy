@@ -18,6 +18,9 @@ class Update implements UpdateInterface
      */
     private $backup_path;
 
+    /**
+     * Update constructor.
+     */
     public function __construct()
     {
         $this->backup_path = __DIR__ . '/../../../var/backup.zip';
@@ -28,11 +31,17 @@ class Update implements UpdateInterface
         ini_set('memory_limit','256M');
     }
 
+    /**
+     * @return array
+     */
     public function getErrors()
     {
         return $this->errors;
     }
 
+    /**
+     * @return bool
+     */
     public function execute()
     {
         #backup
@@ -62,6 +71,10 @@ class Update implements UpdateInterface
         return true;
     }
 
+    /**
+     * @param $zip_path
+     * @return bool
+     */
     protected function install($zip_path)
     {
         $zip = zip_open($zip_path);
@@ -101,29 +114,32 @@ class Update implements UpdateInterface
         return $result;
     }
 
+    /**
+     * @param $source
+     * @param $destination
+     * @return bool
+     */
     protected function backup($source, $destination)
     {
-        if (extension_loaded('zip') === true) {
-            if (file_exists($source) === true) {
-                $zip = new \ZipArchive();
-                if ($zip->open($destination, \ZIPARCHIVE::CREATE) === true) {
-                    $source = realpath($source);
-                    if (is_dir($source) === true) {
-                        $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source), \RecursiveIteratorIterator::SELF_FIRST);
-                        foreach ($files as $file) {
-                            $file = realpath($file);
-                            if (is_dir($file) === true) {
-                                $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
-                            } else if (is_file($file) === true) {
-                                $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
-                            }
+        if (file_exists($source) === true) {
+            $zip = new \ZipArchive();
+            if ($zip->open($destination, \ZIPARCHIVE::CREATE) === true) {
+                $source = realpath($source);
+                if (is_dir($source) === true) {
+                    $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source), \RecursiveIteratorIterator::SELF_FIRST);
+                    foreach ($files as $file) {
+                        $file = realpath($file);
+                        if (is_dir($file) === true) {
+                            $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
+                        } else if (is_file($file) === true) {
+                            $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
                         }
-                    } else if (is_file($source) === true) {
-                        $zip->addFromString(basename($source), file_get_contents($source));
                     }
+                } else if (is_file($source) === true) {
+                    $zip->addFromString(basename($source), file_get_contents($source));
                 }
-                return $zip->close();
             }
+            return $zip->close();
         }
 
         return false;
@@ -159,13 +175,15 @@ class Update implements UpdateInterface
         return $zip_name;
     }
 
+    /**
+     * @param $zip_name
+     */
     protected function postExecuteRemove($zip_name)
     {
         register_shutdown_function(function ($zip_name) {
             Filesystem::removeFile($zip_name, false);
         }, $zip_name);
     }
-
 }
 
 
