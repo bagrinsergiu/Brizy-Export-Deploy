@@ -1,7 +1,7 @@
 <?php
 
 use Symfony\Component\HttpFoundation\Request;
-use BrizyDeploy\Update\Update;
+use BrizyDeploy\Update;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 require_once __DIR__ . '/app/BrizyDeployRequirements.php';

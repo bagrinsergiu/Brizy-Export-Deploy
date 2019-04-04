@@ -1,6 +1,6 @@
 <?php
 
-namespace BrizyDeploy\Update;
+namespace BrizyDeploy;
 
 interface UpdateInterface
 {
