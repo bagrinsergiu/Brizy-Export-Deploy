@@ -3,6 +3,7 @@
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use BrizyDeploy\Update\Update;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 require_once __DIR__ . '/app/BrizyDeployRequirements.php';
 
@@ -32,9 +33,15 @@ if ($hasMajorProblems || $hasMinorProblems) {
 $request = Request::createFromGlobals();
 
 $update = new Update();
-$update->execute();
+$result = $update->execute();
+if ($result) {
+    $response = new JsonResponse([
+        'success' => true
+    ], 200);
+} else {
+    $response = new JsonResponse($update->getErrors(), 400);
+}
 
-$response = new Response('Update', 200);
 $response->send();
 
 exit;

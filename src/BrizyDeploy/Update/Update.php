@@ -28,13 +28,18 @@ class Update implements UpdateInterface
         ini_set('memory_limit','256M');
     }
 
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
     public function execute()
     {
         #backup
         $backup = $this->backup(__DIR__ . '/../../../', $this->backup_path);
         if (!$backup) {
-            echo 'backup was not created';
-            exit;
+            $this->errors['backup'] = 'backup was not created';
+            return false;
         }
 
         #download
@@ -46,14 +51,15 @@ class Update implements UpdateInterface
             if (!$result) {
                 #restore from backup
                 $this->install($this->backup_path);
-                var_dump($this->errors);
-                exit;
+                return false;
             }
         } catch (\Exception $e) {
             #restore from backup
             $this->install($this->backup_path);
-            var_dump($e);
+            return false;
         }
+
+        return true;
     }
 
     protected function install($zip_path)
