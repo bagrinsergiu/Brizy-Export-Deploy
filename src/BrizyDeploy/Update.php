@@ -34,8 +34,8 @@ class Update implements UpdateInterface
     public function __construct($zip_url)
     {
         $this->zip_url = $zip_url;
-        $this->var_dir = realpath(__DIR__ . '/../../../var');
-        $this->backup_path = __DIR__ . '/../../../var/backup.zip';
+        $this->var_dir = realpath(__DIR__ . '/../../var');
+        $this->backup_path = __DIR__ . '/../../var/backup.zip';
 
         ini_set('max_execution_time', 120);
         ini_set('memory_limit','256M');
@@ -55,7 +55,7 @@ class Update implements UpdateInterface
     public function execute()
     {
         #backup
-        $backup = $this->backup(__DIR__ . '/../../Brizy-Export-Deploy/', $this->backup_path);
+        $backup = $this->backup(__DIR__ . '/../../', $this->backup_path);
         if (!$backup) {
             $this->errors['backup'] = 'backup was not created';
             return false;
@@ -97,7 +97,7 @@ class Update implements UpdateInterface
             $name = zip_entry_name($zip_entry);
             if (!preg_match("/\/$/", $name)) {
                 $asset_content = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-                $name = __DIR__ . '/../../Brizy-Export-Deploy/' . str_replace('brizy/', '', $name);
+                $name = __DIR__ . '/../../' . str_replace('brizy/', '', $name);
 
                 $dirname = dirname($name);
 
@@ -167,7 +167,7 @@ class Update implements UpdateInterface
      */
     protected function getZipPath()
     {
-        $zip_name = __DIR__ . '/../../../var/brizy-latest.zip';
+        $zip_name = __DIR__ . '/../../var/brizy-latest.zip';
         $resource = fopen($zip_name, 'w');
         if ($resource === false) {
             $this->errors['error']['zip'][] = 'Can\'t create brizy-latest.zip';
