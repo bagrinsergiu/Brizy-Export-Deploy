@@ -29,7 +29,7 @@ if ($hasMajorProblems || $hasMinorProblems) {
 
 $request = Request::createFromGlobals();
 
-$update = new Update();
+$update = new Update('https://s3.amazonaws.com/bitblox-develop/brizy.zip');
 $result = $update->execute();
 if ($result) {
     $response = new JsonResponse([

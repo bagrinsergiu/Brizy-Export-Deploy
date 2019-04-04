@@ -67,13 +67,8 @@ class Filesystem implements FilesystemInterface
         copy($source, $dest);
     }
 
-    static public function removeFile($file, $handle_error = true)
+    static public function removeFile($file)
     {
-        $handle_error === true ? unlink($file) : @unlink($file);
-    }
-
-    static public function recursiveCreateDir($dirname)
-    {
-        mkdir($dirname, 0755, true);
+        unlink($file);
     }
 }

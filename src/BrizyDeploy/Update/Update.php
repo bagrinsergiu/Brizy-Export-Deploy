@@ -4,7 +4,6 @@ namespace BrizyDeploy\Update;
 
 use BrizyDeploy\Utils\HttpUtils;
 use GuzzleHttp\Stream\Stream;
-use BrizyDeploy\Filesystem;
 
 class Update implements UpdateInterface
 {
@@ -19,13 +18,24 @@ class Update implements UpdateInterface
     private $backup_path;
 
     /**
-     * Update constructor.
+     * @var string
      */
-    public function __construct()
-    {
-        $this->backup_path = __DIR__ . '/../../../var/backup.zip';
+    private $zip_url;
 
-        $this->postExecuteRemove($this->backup_path);
+    /**
+     * @var string
+     */
+    private $var_dir;
+
+    /**
+     * Update constructor.
+     * @param $zip_url
+     */
+    public function __construct($zip_url)
+    {
+        $this->zip_url = $zip_url;
+        $this->var_dir = realpath(__DIR__ . '/../../../var');
+        $this->backup_path = __DIR__ . '/../../../var/backup.zip';
 
         ini_set('max_execution_time', 120);
         ini_set('memory_limit','256M');
@@ -51,12 +61,11 @@ class Update implements UpdateInterface
             return false;
         }
 
-        #download
-        $zip_path = $this->getZipPath('https://s3.amazonaws.com/bitblox-develop/brizy.zip');
+        $this->postExecuteRemove($this->backup_path);
 
         try {
             #execute
-            $result = $this->install($zip_path);
+            $result = $this->install($this->getZipPath());
             if (!$result) {
                 #restore from backup
                 $this->install($this->backup_path);
@@ -93,7 +102,7 @@ class Update implements UpdateInterface
                 $dirname = dirname($name);
 
                 if (!is_dir($dirname)) {
-                    Filesystem::recursiveCreateDir($dirname);
+                    mkdir($dirname, 0755, true);
                 }
 
                 if (file_exists($name) && !is_writable($name)) {
@@ -126,9 +135,17 @@ class Update implements UpdateInterface
             if ($zip->open($destination, \ZIPARCHIVE::CREATE) === true) {
                 $source = realpath($source);
                 if (is_dir($source) === true) {
-                    $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source), \RecursiveIteratorIterator::SELF_FIRST);
+                    $iterator = new \RecursiveDirectoryIterator($source);
+                    $iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
+                    $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
                     foreach ($files as $file) {
                         $file = realpath($file);
+
+                        #exclude var dir
+                        if (strpos($file, $this->var_dir) !== false) {
+                            continue;
+                        }
+
                         if (is_dir($file) === true) {
                             $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
                         } else if (is_file($file) === true) {
@@ -146,10 +163,9 @@ class Update implements UpdateInterface
     }
 
     /**
-     * @param $url
      * @return string|null
      */
-    protected function getZipPath($url)
+    protected function getZipPath()
     {
         $zip_name = __DIR__ . '/../../../var/brizy-latest.zip';
         $resource = fopen($zip_name, 'w');
@@ -162,7 +178,7 @@ class Update implements UpdateInterface
         $client = HttpUtils::getHttpClient();
 
         $response = $client->get(
-            $url,
+            $this->zip_url,
             ['save_to' => $stream]
         );
         if ($response->getStatusCode() != 200) {
@@ -181,7 +197,7 @@ class Update implements UpdateInterface
     protected function postExecuteRemove($zip_name)
     {
         register_shutdown_function(function ($zip_name) {
-            Filesystem::removeFile($zip_name, false);
+            @unlink($zip_name);
         }, $zip_name);
     }
 }
