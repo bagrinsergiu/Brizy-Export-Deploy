@@ -1,9 +1,10 @@
 <?php
 
-namespace BrizyDeploy;
+namespace BrizyDeploy\Update;
 
 use BrizyDeploy\Utils\HttpUtils;
 use GuzzleHttp\Stream\Stream;
+use BrizyDeploy\Filesystem;
 
 class Update implements UpdateInterface
 {
@@ -30,7 +31,7 @@ class Update implements UpdateInterface
     public function execute()
     {
         #backup
-        $backup = $this->backup(__DIR__ . '/../../', $this->backup_path);
+        $backup = $this->backup(__DIR__ . '/../Brizy-Export-Deploy/', $this->backup_path);
         if (!$backup) {
             echo 'backup was not created';
             exit;
@@ -68,7 +69,7 @@ class Update implements UpdateInterface
             $name = zip_entry_name($zip_entry);
             if (!preg_match("/\/$/", $name)) {
                 $asset_content = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-                $name = realpath(__DIR__ . '/../../') . '/' . str_replace('brizy/', '', $name);
+                $name = __DIR__ . '/../../' . str_replace('brizy/', '', $name);
 
                 $dirname = dirname($name);
 
