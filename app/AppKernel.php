@@ -27,6 +27,8 @@ class AppKernel
         $this->config = $this->toArrayConfig();
 
         ini_set('max_execution_time', 60);
+
+        @mkdir(__DIR__ . '/../cache', 0755);
     }
 
     /**

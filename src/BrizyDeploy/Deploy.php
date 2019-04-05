@@ -28,8 +28,8 @@ class Deploy extends BaseDeploy
 
         $params = [
             'source_current' => __DIR__ . '/../../cache',
-            'source_latest' => __DIR__ . '/../../var/cache_latest',
-            'source_backup' => __DIR__ . '/../../var/cache_backup',
+            'source_latest' => sys_get_temp_dir() . '/cache_latest',
+            'source_backup' => sys_get_temp_dir() . '/cache_backup',
             'dist' => realpath(__DIR__ . '/../../'),
             'success' => $is_success
         ];
@@ -45,7 +45,7 @@ class Deploy extends BaseDeploy
      */
     protected function getNormalizedName($name)
     {
-        return realpath(__DIR__ . '/../../') . '/var/cache_latest/' . $name;
+        return sys_get_temp_dir() . '/cache_latest/' . $name;
     }
 
     /**
@@ -53,7 +53,7 @@ class Deploy extends BaseDeploy
      */
     protected function generateZipName()
     {
-        return __DIR__ . '/../../var/brizy-deploy-' . time() . '.zip';
+        return sys_get_temp_dir() . '/brizy-deploy-' . time() . '.zip';
     }
 
     /**
@@ -61,6 +61,6 @@ class Deploy extends BaseDeploy
      */
     protected function backup()
     {
-        return copyDirectory(__DIR__ . '/../../cache', __DIR__ . '/../../var/cache_backup');
+        return copyDirectory(__DIR__ . '/../../cache', sys_get_temp_dir() . '/cache_backup');
     }
 }
