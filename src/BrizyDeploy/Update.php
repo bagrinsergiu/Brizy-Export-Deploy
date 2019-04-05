@@ -4,20 +4,12 @@ namespace BrizyDeploy;
 
 class Update extends BaseDeploy
 {
-
-    /**
-     * @var string
-     */
-    private $var_dir;
-
     /**
      * Update constructor.
      * @param $zip_url
      */
     public function __construct($zip_url)
     {
-        $this->var_dir = realpath(__DIR__ . '/../../var');
-
         parent::__construct($zip_url);
     }
 
@@ -32,7 +24,7 @@ class Update extends BaseDeploy
      */
     protected function getNormalizedName($name)
     {
-        return realpath(__DIR__ . '/../../') . '/' . str_replace('brizy/', 'var/script_latest', $name);
+        return sys_get_temp_dir() . '/script_latest/' . str_replace('brizy/', '', $name);
     }
 
     /**
@@ -40,14 +32,14 @@ class Update extends BaseDeploy
      */
     protected function generateZipName()
     {
-        return __DIR__ . '/../../var/brizy-script-' . time() . '.zip';
+        return sys_get_temp_dir() . '/brizy-script-' . time() . '.zip';
     }
 
     /**
-     * @return void
+     * @return bool
      */
     protected function backup()
     {
-        copyDirectory(__DIR__ . '/../../', __DIR__ . '/../../var/script_backup');
+        return copyDirectory(realpath(__DIR__ . '/../../'), sys_get_temp_dir() . '/script_backup');
     }
 }

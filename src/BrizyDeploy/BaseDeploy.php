@@ -35,13 +35,16 @@ abstract class BaseDeploy
 
     protected function innerExecute()
     {
-        $this->backup();
+        if (!$this->backup()) {
+            $this->errors['error']['backup'][] = 'backup was not created';
+            return false;
+        }
 
         return $this->extract();
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     abstract protected function backup();
 

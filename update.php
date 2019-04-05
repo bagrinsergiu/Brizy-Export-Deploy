@@ -5,6 +5,7 @@ use BrizyDeploy\Update;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 require_once __DIR__ . '/app/BrizyDeployRequirements.php';
+require_once 'utils.php';
 
 $composerAutoload = __DIR__ . '/vendor/autoload.php';
 if (!file_exists($composerAutoload)) {

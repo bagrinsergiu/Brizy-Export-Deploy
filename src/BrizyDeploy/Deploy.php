@@ -59,10 +59,10 @@ class Deploy extends BaseDeploy
     }
 
     /**
-     * @return mixed|void
+     * @return bool
      */
     protected function backup()
     {
-        copyDirectory(__DIR__ . '/../../var/cache', __DIR__ . '/../../var/cache_backup');
+        return copyDirectory(__DIR__ . '/../../var/cache', __DIR__ . '/../../var/cache_backup');
     }
 }
