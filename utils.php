@@ -50,9 +50,18 @@ function recursiveRemoveDir($dir)
     }
 }
 
+function removeDirectory($path) {
+    $files = glob($path . '/*');
+    foreach ($files as $file) {
+        is_dir($file) ? removeDirectory($file) : unlink($file);
+    }
+    rmdir($path);
+    return;
+}
+
 function post_deploy_action($params)
 {
-    deleteFilesByPattern($params['delete_files']);
+    removeDirectory($params['source_current']);
     if ($params['success']) {
         copyDirectory($params['source_latest'], $params['dist']);
     } else {
