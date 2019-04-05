@@ -40,7 +40,12 @@ abstract class BaseDeploy
             return false;
         }
 
-        return $this->extract();
+        try {
+            return $this->extract();
+        } catch (\Exception $e) {
+            $this->errors['error']['extract'][] = $e->getMessage();
+            return false;
+        }
     }
 
     /**
