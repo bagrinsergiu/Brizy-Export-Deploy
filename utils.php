@@ -50,18 +50,19 @@ function recursiveRemoveDir($dir)
     }
 }
 
-function removeDirectory($path) {
-    $files = glob($path . '/*');
-    foreach ($files as $file) {
-        is_dir($file) ? removeDirectory($file) : unlink($file);
+function rrmdir($path){
+    if (is_dir($path)) {
+        array_map( "rrmdir", glob($path . DIRECTORY_SEPARATOR . '{,.[!.]}*', GLOB_BRACE) );
+        @rmdir($path);
     }
-    rmdir($path);
-    return;
+    else {
+        @unlink($path);
+    }
 }
 
 function post_deploy_action($params)
 {
-    removeDirectory($params['source_current']);
+    rrmdir($params['source_current']);
     if ($params['success']) {
         copyDirectory($params['source_latest'], $params['dist']);
     } else {

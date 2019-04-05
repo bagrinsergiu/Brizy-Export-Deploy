@@ -27,9 +27,7 @@ class Deploy extends BaseDeploy
         $is_success = $this->innerExecute();
 
         $params = [
-            'delete_files' => [
-                __DIR__ . '/../../cache/*'
-            ],
+            'source_current' => __DIR__ . '/../../cache',
             'source_latest' => __DIR__ . '/../../var/cache_latest',
             'source_backup' => __DIR__ . '/../../var/cache_backup',
             'dist' => realpath(__DIR__ . '/../../'),
@@ -63,6 +61,6 @@ class Deploy extends BaseDeploy
      */
     protected function backup()
     {
-        return copyDirectory(__DIR__ . '/../../var/cache', __DIR__ . '/../../var/cache_backup');
+        return copyDirectory(__DIR__ . '/../../cache', __DIR__ . '/../../var/cache_backup');
     }
 }
