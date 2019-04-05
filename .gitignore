@@ -2,5 +2,4 @@
 vendor/
 var/*
 !var/.gitkeep
-!var/cache/.gitkeep
-!var/cache/img/.gitkeep
+cache/*

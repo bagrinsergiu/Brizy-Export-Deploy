@@ -399,28 +399,28 @@ class BrizyDeployRequirements extends RequirementCollection
             'Then run "<strong>php composer.phar install</strong>" to install them.'
         );
 
-        $this->addRequirement(
-            is_dir(__DIR__ . '/../var/cache/'),
-            'Directory var/cache/ must exists',
-            'Create "<strong>var/cache/</strong>" directory.'
-        );
-
-        $this->addRequirement(
-            is_dir(__DIR__ . '/../var/cache/img/'),
-            'Directory var/cache/img/ must exists',
-            'Create "<strong>var/cache/img/</strong>" directory.'
-        );
-
-        $this->addRequirement(
-            is_writable(__DIR__ . '/../var/cache/'),
-            'var/cache/ directory must be writable',
-            'Change the permissions of either "<strong>var/cache/</strong>" directory so that the web server can write into it.'
-        );
-
-        $this->addRequirement(
-            is_writable(__DIR__ . '/../var/cache/img/'),
-            'var/cache/img/ directory must be writable',
-            'Change the permissions of either "<strong>var/cache/img/</strong>" directory so that the web server can write into it.'
-        );
+//        $this->addRequirement(
+//            is_dir(__DIR__ . '/../var/cache/'),
+//            'Directory var/cache/ must exists',
+//            'Create "<strong>var/cache/</strong>" directory.'
+//        );
+//
+//        $this->addRequirement(
+//            is_dir(__DIR__ . '/../var/cache/img/'),
+//            'Directory var/cache/img/ must exists',
+//            'Create "<strong>var/cache/img/</strong>" directory.'
+//        );
+//
+//        $this->addRequirement(
+//            is_writable(__DIR__ . '/../var/cache/'),
+//            'var/cache/ directory must be writable',
+//            'Change the permissions of either "<strong>var/cache/</strong>" directory so that the web server can write into it.'
+//        );
+//
+//        $this->addRequirement(
+//            is_writable(__DIR__ . '/../var/cache/img/'),
+//            'var/cache/img/ directory must be writable',
+//            'Change the permissions of either "<strong>var/cache/img/</strong>" directory so that the web server can write into it.'
+//        );
     }
 }

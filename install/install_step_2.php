@@ -16,6 +16,7 @@ if (!file_exists($composerAutoload)) {
 require $composerAutoload;
 
 require_once __DIR__ . '/../app/AppKernel.php';
+require_once __DIR__ . '/../utils.php';
 
 $request = Request::createFromGlobals();
 
@@ -33,14 +34,14 @@ if ($appKernel->isInstalled() === true) {
 $deploy = new Deploy($appKernel->getDeployUrl(), $appKernel->getAppId());
 
 try {
-    $deploy->execute();
+    $deployed = $deploy->execute();
 } catch (\Exception $e) {
     $response = new Response($e->getMessage() . " in " . $e->getFile(), 500);
     $response->send();
     exit;
 }
 
-if (!$deploy->isSucceeded()) {
+if (!$deployed) {
     $errors = $deploy->getErrors();
     $response = new JsonResponse($errors, 400);
     $response->send();

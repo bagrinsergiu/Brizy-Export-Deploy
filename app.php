@@ -19,7 +19,7 @@ $request = Request::createFromGlobals();
 
 $appKernel = new AppKernel();
 if ($appKernel->isInstalled() === true) {
-    $html = file_get_contents(__DIR__ . '/var/page.html');
+    $html = file_get_contents(__DIR__ . '/cache/index.html');
     $response = new Response($html, 200);
     $response->send();
 } else {

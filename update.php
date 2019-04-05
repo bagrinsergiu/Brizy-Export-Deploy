@@ -41,6 +41,7 @@ if (!$zip_url = $request->query->get('zip_url')) {
 $update = new Update($zip_url);
 $result = $update->execute();
 if ($result) {
+    //@todo redirect to update_finish.php
     $response = new JsonResponse([
         'success' => true,
         'message' => 'Successfully updated'
