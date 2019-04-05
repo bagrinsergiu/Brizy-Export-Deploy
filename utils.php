@@ -60,15 +60,24 @@ function rrmdir($path){
     }
 }
 
+function folder_exist($folder)
+{
+    $path = realpath($folder);
+
+    return ($path !== false && is_dir($path)) ? true : false;
+}
+
 function post_deploy_action($params)
 {
-    rrmdir($params['source_current']);
-    if ($params['success']) {
-        copyDirectory($params['source_latest'], $params['dist']);
-    } else {
-        copyDirectory($params['source_backup'], $params['dist']);
-    }
+    if (folder_exist($params['source_latest']) && folder_exist($params['source_backup'])) {
+        rrmdir($params['source_current']);
+        if ($params['success']) {
+            copyDirectory($params['source_latest'], $params['dist']);
+        } else {
+            copyDirectory($params['source_backup'], $params['dist']);
+        }
 
-    recursiveRemoveDir($params['source_latest']);
-    recursiveRemoveDir($params['source_backup']);
+        recursiveRemoveDir($params['source_latest']);
+        recursiveRemoveDir($params['source_backup']);
+    }
 }
