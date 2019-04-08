@@ -53,7 +53,10 @@ function recursiveRemoveDir($dir)
 function rrmdir($path, array $exclude_paths = [])
 {
     if (is_dir($path)) {
-        array_map("rrmdir", glob($path . DIRECTORY_SEPARATOR . '{,.[!.]}*', GLOB_BRACE));
+        $paths = glob($path . DIRECTORY_SEPARATOR . '{,.[!.]}*', GLOB_BRACE);
+        foreach ($paths as $one_path) {
+            rrmdir($one_path);
+        }
 
         $removable = false;
         foreach ($exclude_paths as $exclude_path) {
