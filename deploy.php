@@ -13,6 +13,7 @@ if (!file_exists($composerAutoload)) {
 require $composerAutoload;
 
 require_once __DIR__ . '/app/AppKernel.php';
+require_once 'utils.php';
 
 $appKernel = new AppKernel();
 if ($appKernel->isInstalled() === false) {
