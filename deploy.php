@@ -24,19 +24,20 @@ if ($appKernel->isInstalled() === false) {
 $deploy = new Deploy($appKernel->getDeployUrl(), $appKernel->getAppId());
 
 try {
-    $deploy->execute();
+    $deployed = $deploy->execute();
 } catch (\Exception $e) {
-    $response = new Response($e->getMessage(), 500);
+    $response = new Response($e->getMessage() . " in " . $e->getFile(), 500);
     $response->send();
     exit;
 }
 
-if (!$deploy->isSucceeded()) {
+if (!$deployed) {
     $errors = $deploy->getErrors();
-    $response = new JsonResponse(json_encode($errors), 400);
+    $response = new JsonResponse($errors, 400);
     $response->send();
     exit;
 }
 
 $response = new Response('Successfully deployed.', 200);
+$response->send();
 exit;

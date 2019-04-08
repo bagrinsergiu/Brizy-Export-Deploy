@@ -387,9 +387,9 @@ class BrizyDeployRequirements extends RequirementCollection
         );
 
         $this->addRequirement(
-            is_writable(__DIR__ .'/../var/'),
-            'var/ directory must be writable',
-            'Change the permissions of either "<strong>var/</strong>" directory so that the web server can write into it.'
+            is_writable(realpath(__DIR__ .'/../')),
+            '/ directory must be writable',
+            'Change the permissions of either "<strong>/</strong>" directory so that the web server can write into it.'
         );
 
         $this->addRequirement(
@@ -398,29 +398,5 @@ class BrizyDeployRequirements extends RequirementCollection
             'Vendor libraries are missing. Install composer following instructions from <a href="http://getcomposer.org/">http://getcomposer.org/</a>. '.
             'Then run "<strong>php composer.phar install</strong>" to install them.'
         );
-
-//        $this->addRequirement(
-//            is_dir(__DIR__ . '/../var/cache/'),
-//            'Directory var/cache/ must exists',
-//            'Create "<strong>var/cache/</strong>" directory.'
-//        );
-//
-//        $this->addRequirement(
-//            is_dir(__DIR__ . '/../var/cache/img/'),
-//            'Directory var/cache/img/ must exists',
-//            'Create "<strong>var/cache/img/</strong>" directory.'
-//        );
-//
-//        $this->addRequirement(
-//            is_writable(__DIR__ . '/../var/cache/'),
-//            'var/cache/ directory must be writable',
-//            'Change the permissions of either "<strong>var/cache/</strong>" directory so that the web server can write into it.'
-//        );
-//
-//        $this->addRequirement(
-//            is_writable(__DIR__ . '/../var/cache/img/'),
-//            'var/cache/img/ directory must be writable',
-//            'Change the permissions of either "<strong>var/cache/img/</strong>" directory so that the web server can write into it.'
-//        );
     }
 }
