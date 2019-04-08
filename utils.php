@@ -55,18 +55,13 @@ function rrmdir($path, array $exclude_paths = [])
     if (is_dir($path)) {
         $paths = glob($path . DIRECTORY_SEPARATOR . '{,.[!.]}*', GLOB_BRACE);
         foreach ($paths as $one_path) {
+            if (in_array($one_path, $exclude_paths)) {
+                continue;
+            }
             rrmdir($one_path);
         }
 
-        $removable = false;
-        foreach ($exclude_paths as $exclude_path) {
-            if (strpos($path, $exclude_path) !== false) {
-                $removable = true;
-                break;
-            }
-        }
-        if ($removable)
-            @rmdir($path);
+        @rmdir($path);
     } else {
         @unlink($path);
     }
