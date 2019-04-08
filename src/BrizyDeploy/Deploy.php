@@ -31,7 +31,8 @@ class Deploy extends BaseDeploy
             'source_latest' => sys_get_temp_dir() . '/cache_latest',
             'source_backup' => sys_get_temp_dir() . '/cache_backup',
             'dist' => realpath(__DIR__ . '/../../'),
-            'success' => $is_success
+            'success' => $is_success,
+            'exclude_remove_dir' => []
         ];
 
         post_deploy_action($params);

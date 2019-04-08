@@ -50,11 +50,20 @@ function recursiveRemoveDir($dir)
     }
 }
 
-function rrmdir($path)
+function rrmdir($path, array $exclude_paths = [])
 {
     if (is_dir($path)) {
         array_map("rrmdir", glob($path . DIRECTORY_SEPARATOR . '{,.[!.]}*', GLOB_BRACE));
-        @rmdir($path);
+
+        $removable = false;
+        foreach ($exclude_paths as $exclude_path) {
+            if (strpos($path, $exclude_path) !== false) {
+                $removable = true;
+                break;
+            }
+        }
+        if ($removable)
+            @rmdir($path);
     } else {
         @unlink($path);
     }
@@ -70,7 +79,7 @@ function folder_exist($folder)
 function post_deploy_action($params)
 {
     if (folder_exist($params['source_latest']) && folder_exist($params['source_backup'])) {
-        rrmdir($params['source_current']);
+        rrmdir($params['source_current'], $params['exclude_remove_dir']);
         if ($params['success']) {
             copyDirectory($params['source_latest'], $params['dist']);
         } else {
