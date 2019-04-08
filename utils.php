@@ -50,12 +50,12 @@ function recursiveRemoveDir($dir)
     }
 }
 
-function rrmdir($path){
+function rrmdir($path)
+{
     if (is_dir($path)) {
-        array_map( "rrmdir", glob($path . DIRECTORY_SEPARATOR . '{,.[!.]}*', GLOB_BRACE) );
+        array_map("rrmdir", glob($path . DIRECTORY_SEPARATOR . '{,.[!.]}*', GLOB_BRACE));
         @rmdir($path);
-    }
-    else {
+    } else {
         @unlink($path);
     }
 }

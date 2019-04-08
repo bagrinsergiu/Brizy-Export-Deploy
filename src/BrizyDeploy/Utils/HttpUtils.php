@@ -36,7 +36,7 @@ class HttpUtils
 
     static public function getClientIP(Request $request)
     {
-        if($request->server->get("HTTP_X_FORWARDED_FOR")) {
+        if ($request->server->get("HTTP_X_FORWARDED_FOR")) {
             $clientIP = explode(",", $request->server->get("HTTP_X_FORWARDED_FOR"));
             $clientIP = $clientIP[0];
         } else {
