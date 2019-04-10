@@ -4,6 +4,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use BrizyDeploy\Utils\HttpUtils;
 use Symfony\Component\HttpFoundation\Response;
+use BrizyDeploy\Modal\AppRepository;
 
 $composerAutoload = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -15,10 +16,22 @@ require $composerAutoload;
 
 $request = Request::createFromGlobals();
 
-require_once __DIR__ . '/../app/AppKernel.php';
+require_once __DIR__ . '/../app/Kernel.php';
 
-$appKernel = new AppKernel();
-$appKernel->init();
+if (Kernel::isInstalled()) {
+    $response = new RedirectResponse(HttpUtils::getBaseUrl(
+        $request,
+        '/install/install_step_1.php',
+        ''
+    ));
+    $response->send();
+    exit;
+}
+
+Kernel::init();
+
+$appRepository = new AppRepository();
+$app = $appRepository->get();
 
 $clientIP = HttpUtils::getClientIP($request);
 $is_localhost = 0;
@@ -30,12 +43,12 @@ if ($clientIP == '127.0.0.1' || $clientIP == '::1') {
 $client = HttpUtils::getHttpClient();
 $connectUrl = HttpUtils::getBaseUrl($request, '/install/install_step_1.php', '/connect.php');
 $baseUrl = HttpUtils::getBaseUrl($request, '/install/install_step_1.php', '');
-$url = $appKernel->getDeployUrl() . '/export/check-connection';
+$url = $app->getDeployUrl() . '/export/check-connection';
 $response = $client->post($url, [
     'body' => [
         'base_url' => $baseUrl,
         'connect_url' => $connectUrl,
-        'project_uid' => $appKernel->getAppId(),
+        'project_uid' => $app->getAppId(),
         'is_localhost' => $is_localhost
     ]
 ]);

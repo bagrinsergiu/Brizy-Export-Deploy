@@ -1,10 +1,9 @@
 <?php
 
 require_once __DIR__ . '/app/BrizyDeployRequirements.php';
-require_once __DIR__ . '/app/AppKernel.php';
+require_once __DIR__ . '/app/Kernel.php';
 
-$appKernel = new AppKernel();
-if ($appKernel->isInit()) {
+if (Kernel::isInstalled()) {
     require_once 'app.php';
     exit;
 }
