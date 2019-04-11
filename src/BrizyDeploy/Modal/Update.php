@@ -7,7 +7,7 @@ class Update
     /**
      * @var boolean
      */
-    protected $execute;
+    protected $maintenance;
 
     /**
      * @var string
@@ -17,17 +17,14 @@ class Update
     static public function getInstance()
     {
         $update = new Update();
+        $update->setMaintenance(false);
 
         $config_dist = __DIR__ . '/../../../app/config/config.json.dist';
         $config_dist = json_decode(file_get_contents($config_dist), true);
         if (!$config_dist) {
-            $update
-                ->setVersion(null)
-                ->setExecute(false);
+            $update->setVersion(null);
         } else {
-            $update
-                ->setVersion($config_dist['version'])
-                ->setExecute(false);
+            $update->setVersion($config_dist['version']);
         }
 
         return $update;
@@ -36,18 +33,18 @@ class Update
     /**
      * @return boolean
      */
-    public function getExecute()
+    public function getMaintenance()
     {
-        return $this->execute;
+        return $this->maintenance;
     }
 
     /**
-     * @param $execute
+     * @param $maintenance
      * @return $this
      */
-    public function setExecute($execute)
+    public function setMaintenance($maintenance)
     {
-        $this->execute = $execute;
+        $this->maintenance = $maintenance;
 
         return $this;
     }
@@ -80,7 +77,7 @@ class Update
     public function serialize()
     {
         return serialize([
-            $this->execute,
+            $this->maintenance,
             $this->version
         ]);
     }
@@ -97,7 +94,7 @@ class Update
     public function unserialize($serialized)
     {
         list(
-            $this->execute,
+            $this->maintenance,
             $this->version
             ) = unserialize($serialized);
     }

@@ -1,13 +1,15 @@
 <?php
 
+use BrizyDeploy\Modal\AppRepository;
 use BrizyDeploy\Utils\HttpUtils;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use BrizyDeploy\Update;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 require_once __DIR__ . '/app/BrizyDeployRequirements.php';
-require_once 'utils.php';
+require_once 'app/utils.php';
 
 $composerAutoload = __DIR__ . '/vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -32,6 +34,14 @@ if ($hasMajorProblems || $hasMinorProblems) {
 
 $request = Request::createFromGlobals();
 
+$appRepository = new AppRepository();
+$app = $appRepository->get();
+if (!$app || $request->get('app_id') != $app->getAppId()) {
+    $response = new Response('Unauthorized', 401);
+    $response->send();
+    exit;
+}
+
 if (!$zip_url = $request->query->get('zip_url')) {
     $response = new JsonResponse([
         'success' => false,
@@ -44,11 +54,7 @@ if (!$zip_url = $request->query->get('zip_url')) {
 $update = new Update($zip_url);
 $result = $update->execute();
 if ($result) {
-    $response = new RedirectResponse(HttpUtils::getBaseUrl(
-        $request,
-        '/update.php',
-        '/update_finish.php'
-    ));
+    $response = new JsonResponse('Done', 200);
 } else {
     $response = new JsonResponse($update->getErrors(), 400);
 }

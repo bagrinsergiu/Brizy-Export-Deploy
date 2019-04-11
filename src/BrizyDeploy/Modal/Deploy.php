@@ -21,7 +21,7 @@ class Deploy
 
     static public function getInstance()
     {
-        return new Deploy(false);
+        return new Deploy(true);
     }
 
     /**

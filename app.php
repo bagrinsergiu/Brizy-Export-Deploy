@@ -18,18 +18,12 @@ if (!file_exists($composerAutoload)) {
 require $composerAutoload;
 
 require_once __DIR__ . '/app/Kernel.php';
+require_once 'app/utils.php';
 
 $request = Request::createFromGlobals();
 
-// @todo is installed?
-
-// @todo is updated?
-
-// @todo is deployed?
-
 $appRepository = new AppRepository();
 $app = $appRepository->get();
-
 if (!$app || !$app->getInstalled() || !Kernel::isInstalled()) {
     $response = new RedirectResponse(HttpUtils::getBaseUrl(
         $request,
@@ -46,7 +40,7 @@ if (!$app || !$app->getInstalled() || !Kernel::isInstalled()) {
 
 $deployRepository = new DeployRepository();
 $deploy = $deployRepository->get();
-if ($deploy->getTimestamp() === null || $deploy->getExecute()) {
+if ($deploy && $deploy->getExecute()) {
     $deployService = new Deploy($app->getDeployUrl(), $app->getAppId());
 
     try {

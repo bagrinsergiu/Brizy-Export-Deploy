@@ -1,10 +1,13 @@
 <?php
 
+use BrizyDeploy\Modal\AppRepository;
+use BrizyDeploy\Modal\DeployRepository;
+use BrizyDeploy\Modal\Update;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use BrizyDeploy\Modal\UpdateRepository;
 
 require_once __DIR__ . '/app/BrizyDeployRequirements.php';
-require_once 'utils.php';
 
 $composerAutoload = __DIR__ . '/vendor/autoload.php';
 if (!file_exists($composerAutoload)) {
@@ -14,23 +17,49 @@ if (!file_exists($composerAutoload)) {
 
 require $composerAutoload;
 
-//require_once __DIR__ . '/app/AppKernel.php';
-//
-//$appKernel = new AppKernel();
-//if ($appKernel->isInstalled() === false) {
-//    $response = new Response('App was not installed.', 500);
-//    $response->send();
-//    exit;
-//}
+require_once __DIR__ . '/app/Kernel.php';
 
 $request = Request::createFromGlobals();
 
+$appRepository = new AppRepository();
+$app = $appRepository->get();
+if (!$app || $request->get('app_id') != $app->getAppId()) {
+    $response = new Response('Unauthorized', 401);
+    $response->send();
+    exit;
+}
+
 $action = $request->get('action');
 switch ($action) {
+    case 'maintenance':
+        $updateRepository = new UpdateRepository();
+        $update = $updateRepository->get();
+        if (!$update) {
+            $response = new Response('Error.', 400);
+            $response->send();
+            exit;
+        }
+
+        $update->setMaintenance(true);
+        $updateRepository->update($update);
+
+        break;
     case 'update':
+        $updateRepository = new UpdateRepository();
+        $updateRepository->create(Update::getInstance());
 
         break;
     case 'deploy':
+        $deployRepository = new DeployRepository();
+        $deploy = $deployRepository->get();
+        if (!$deploy) {
+            $response = new Response('Error.', 400);
+            $response->send();
+            exit;
+        }
+
+        $deploy->setExecute(true);
+        $deployRepository->update($deploy);
 
         break;
     default:
@@ -39,6 +68,6 @@ switch ($action) {
         exit;
 }
 
-$response = new Response('controller.php. Action: '.$action);
+$response = new Response('Done.', 200);
 $response->send();
 exit;

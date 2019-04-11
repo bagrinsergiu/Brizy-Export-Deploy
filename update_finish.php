@@ -1,6 +1,6 @@
 <?php
 
-require_once 'utils.php';
+require_once 'app/utils.php';
 
 $params = [
     'source_current' => __DIR__,

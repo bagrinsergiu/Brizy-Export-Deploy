@@ -59,10 +59,13 @@ if ($response->getStatusCode() != 200) {
     exit;
 }
 
+$app->setInstalled(true);
+$appRepository->update($app);
+
 $response = new RedirectResponse(HttpUtils::getBaseUrl(
     $request,
     '/install/install_step_1.php',
-    '/install/install_step_2.php'
+    ''
 ));
 $response->send();
 
