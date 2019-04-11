@@ -19,6 +19,11 @@ class App
      */
     protected $app_id;
 
+    /**
+     * @var string
+     */
+    protected $base_url;
+
     static public function getInstance()
     {
         $app = new App();
@@ -97,6 +102,25 @@ class App
     }
 
     /**
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        return $this->base_url;
+    }
+
+    /**
+     * @param $base_url
+     * @return $this
+     */
+    public function setBaseUrl($base_url)
+    {
+        $this->base_url = $base_url;
+
+        return $this;
+    }
+
+    /**
      * String representation of object
      * @link https://php.net/manual/en/serializable.serialize.php
      * @return string the string representation of the object or null
@@ -107,7 +131,8 @@ class App
         return serialize([
             $this->installed,
             $this->deploy_url,
-            $this->app_id
+            $this->app_id,
+            $this->base_url
         ]);
     }
 
@@ -125,7 +150,8 @@ class App
         list(
             $this->installed,
             $this->deploy_url,
-            $this->app_id
+            $this->app_id,
+            $this->base_url
             ) = unserialize($serialized);
     }
 }

@@ -59,6 +59,11 @@ if ($response->getStatusCode() != 200) {
     exit;
 }
 
+$app->setBaseUrl(HttpUtils::getBaseUrl(
+    $request,
+    '/install/install_step_1.php',
+    ''
+));
 $app->setInstalled(true);
 $appRepository->update($app);
 

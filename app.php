@@ -38,6 +38,20 @@ if (!$app || !$app->getInstalled() || !Kernel::isInstalled()) {
     $response->send();
 }
 
+$baseUrl = HttpUtils::getBaseUrl(
+    $request,
+    '',
+    ''
+);
+
+if ($app->getBaseUrl() != $baseUrl) {
+    $response = new JsonResponse([
+        'message' => 'Invalid base url'
+    ], 400);
+    $response->send();
+    exit;
+}
+
 $deployRepository = new DeployRepository();
 $deploy = $deployRepository->get();
 if ($deploy && $deploy->getExecute()) {
