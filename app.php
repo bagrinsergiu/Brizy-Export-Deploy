@@ -77,7 +77,11 @@ if ($deploy && $deploy->getExecute()) {
     $deployRepository->update($deploy);
 }
 
-$html = file_get_contents(__DIR__ . '/cache/index.html');
+if (!$page = $request->query->get('page')) {
+    $page = 'index.html';
+}
+
+$html = file_get_contents(__DIR__ . '/cache/' . $page);
 $response = new Response($html, 200);
 $response->send();
 
