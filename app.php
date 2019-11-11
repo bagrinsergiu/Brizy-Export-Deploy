@@ -82,7 +82,7 @@ if (!$page = $request->query->get('page')) {
 }
 
 $html = file_get_contents(__DIR__ . '/cache/' . $page);
-$url = strtok($request->getUri(), '?');
+$url = $request->getUri();
 $html = str_replace(
     [
         '{{ brizy_dc_page_language }}',
