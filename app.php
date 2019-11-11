@@ -82,6 +82,23 @@ if (!$page = $request->query->get('page')) {
 }
 
 $html = file_get_contents(__DIR__ . '/cache/' . $page);
+$url = strtok($request->getUri(), '?');
+$html = str_replace(
+    [
+        '{{ brizy_dc_page_language }}',
+        '{{ brizy_dc_current_page_unique_url }}',
+        '{{ brizy_dc_group_language }}',
+        '{{ site_url }}'
+    ],
+    [
+        'en',
+        $url,
+        'en',
+        $url
+    ],
+    $html
+);
+
 $response = new Response($html, 200);
 $response->send();
 
