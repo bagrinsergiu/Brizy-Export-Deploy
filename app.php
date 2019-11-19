@@ -78,10 +78,16 @@ if ($deploy && $deploy->getExecute()) {
 }
 
 if (!$page = $request->query->get('page')) {
-    $page = 'index.html';
+    $page = 'index';
 }
 
-$html = file_get_contents(__DIR__ . '/cache/' . $page);
+$html = file_get_contents(__DIR__ . '/cache/' . $page . '.html');
+if (!$html) {
+    $response = new Response("Page was not found", 404);
+    $response->send();
+    exit;
+}
+
 $url = $request->getUri();
 $html = str_replace(
     [
