@@ -73,7 +73,7 @@ abstract class BaseDeploy
 
                 $dirname = dirname($name);
                 if (!is_dir($dirname)) {
-                    mkdir($dirname, 0755, true);
+                    mkdir($dirname, 0775, true);
                 }
 
                 if (file_exists($name) && !is_writable($name)) {

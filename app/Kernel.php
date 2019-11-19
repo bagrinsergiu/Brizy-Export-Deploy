@@ -20,7 +20,7 @@ class Kernel
         $updateRepository = new UpdateRepository();
         $updateRepository->create(Update::getInstance());
 
-        mkdir(__DIR__ . '/../cache', 0755);
+        mkdir(__DIR__ . '/../cache', 0775);
     }
 
     static public function isInstalled()

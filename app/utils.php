@@ -19,7 +19,7 @@ function copyDirectory($src, $dst)
         return false;
     }
 
-    @mkdir($dst, 0755);
+    @mkdir($dst, 0775);
     while (false !== ($file = readdir($dir))) {
         if (($file != '.') && ($file != '..')) {
             if (is_dir($src . '/' . $file)) {
