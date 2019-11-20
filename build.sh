@@ -15,6 +15,7 @@ composer install --optimize-autoloader --no-dev
 #remove files for git
 rm -rf .git
 rm .gitignore
+rm build.sh
 
 #set permissions
 find . -type d -print0 | xargs -0 chmod 0775
