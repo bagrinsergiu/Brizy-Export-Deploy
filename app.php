@@ -28,7 +28,7 @@ if (!$app || !$app->getInstalled() || !Kernel::isInstalled()) {
     $response = new RedirectResponse(HttpUtils::getBaseUrl(
         $request,
         '',
-        '/install/install_step_1.php'
+        '/install_step_1.php'
     ));
 
     $response->setPrivate();
