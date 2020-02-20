@@ -36,6 +36,7 @@ if (!$app || !$app->getInstalled() || !Kernel::isInstalled()) {
     $response->headers->addCacheControlDirective('must-revalidate', true);
     $response->headers->addCacheControlDirective('no-store', true);
     $response->send();
+    exit;
 }
 
 $baseUrl = HttpUtils::getBaseUrl(
@@ -56,6 +57,14 @@ $deployRepository = new DeployRepository();
 $deploy = $deployRepository->get();
 if ($deploy && $deploy->getExecute()) {
     $deployService = new Deploy($app->getDeployUrl(), $app->getAppId());
+    $zipInfo = $deployService->getZipInfo();
+    $deploy->setZipInfoTimestamp(time());
+    $deployRepository->update($deploy);
+    if (!$zipInfo) {
+        $response = new Response('Sync in processing. It may take a some time.', 400);
+        $response->send();
+        exit;
+    }
 
     try {
         $deployed = $deployService->execute();
@@ -75,6 +84,33 @@ if ($deploy && $deploy->getExecute()) {
     $deploy->setExecute(false);
     $deploy->setTimestamp(time());
     $deployRepository->update($deploy);
+}
+
+if ($deploy && $deploy->getUpdate()) {
+    $deployService = new Deploy($app->getDeployUrl(), $app->getAppId());
+    if ((time() - Deploy::ZIP_INFO_INTERVAL) > $deploy->getZipInfoTimestamp()) {
+        $zipInfo = $deployService->getZipInfo();
+        $deploy->setZipInfoTimestamp(time());
+        $deployRepository->update($deploy);
+        if ($zipInfo) {
+            $deploy->setExecute(true);
+            $deploy->setUpdate(false);
+            $deploy->setTimestamp(time());
+            $deployRepository->update($deploy);
+            $response = new RedirectResponse(HttpUtils::getBaseUrl(
+                $request,
+                '',
+                ''
+            ));
+
+            $response->setPrivate();
+            $response->setMaxAge(0);
+            $response->headers->addCacheControlDirective('must-revalidate', true);
+            $response->headers->addCacheControlDirective('no-store', true);
+            $response->send();
+            exit;
+        }
+    }
 }
 
 if (!$page = $request->query->get('page')) {

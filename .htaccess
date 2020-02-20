@@ -1,5 +1,16 @@
 <IfModule mod_rewrite.c>
     RewriteEngine on
+
+    # --- Redirect from http to https
+    #RewriteCond %{HTTPS} off
+    #RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    # ---
+
+    # --- Redirect from non-www to www
+    #RewriteCond %{HTTP_HOST} ^yourdomain.com [NC]
+    #RewriteRule ^(.*)$ https://www.yourdomain.com/$1 [L,R=301]
+    # ---
+
     RewriteBase /
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond $0#%{REQUEST_URI} ([^#]*)#(.*)\1$

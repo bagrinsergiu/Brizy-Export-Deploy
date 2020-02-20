@@ -14,14 +14,30 @@ class Deploy
      */
     protected $timestamp;
 
-    public function __construct($execute)
+    /**
+     * @var boolean
+     */
+    protected $update;
+
+    /**
+     * @var int
+     */
+    protected $zip_info_timestamp;
+
+    /**
+     * Deploy constructor.
+     * @param $execute
+     * @param $update
+     */
+    public function __construct($execute, $update)
     {
         $this->execute = $execute;
+        $this->update = $update;
     }
 
     static public function getInstance()
     {
-        return new Deploy(true);
+        return new Deploy(true, false);
     }
 
     /**
@@ -39,6 +55,25 @@ class Deploy
     public function setExecute($execute)
     {
         $this->execute = $execute;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getUpdate()
+    {
+        return $this->update;
+    }
+
+    /**
+     * @param $update
+     * @return $this
+     */
+    public function setUpdate($update)
+    {
+        $this->update = $update;
 
         return $this;
     }
@@ -63,6 +98,25 @@ class Deploy
     }
 
     /**
+     * @return int
+     */
+    public function getZipInfoTimestamp()
+    {
+        return $this->zip_info_timestamp;
+    }
+
+    /**
+     * @param $zip_info_timestamp
+     * @return $this
+     */
+    public function setZipInfoTimestamp($zip_info_timestamp)
+    {
+        $this->zip_info_timestamp = $zip_info_timestamp;
+
+        return $this;
+    }
+
+    /**
      * String representation of object
      * @link https://php.net/manual/en/serializable.serialize.php
      * @return string the string representation of the object or null
@@ -71,7 +125,8 @@ class Deploy
     public function serialize()
     {
         return serialize([
-            $this->execute
+            $this->execute,
+            $this->update
         ]);
     }
 
@@ -87,7 +142,8 @@ class Deploy
     public function unserialize($serialized)
     {
         list(
-            $this->execute
+            $this->execute,
+            $this->update
             ) = unserialize($serialized);
     }
 }

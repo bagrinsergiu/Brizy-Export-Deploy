@@ -19,7 +19,7 @@ abstract class BaseDeploy
 
     public function __construct($zip_url)
     {
-        ini_set('max_execution_time', 120);
+        ini_set('max_execution_time', 180);
         ini_set('memory_limit', '256M');
 
         $this->zip_url = $zip_url;
@@ -73,7 +73,7 @@ abstract class BaseDeploy
 
                 $dirname = dirname($name);
                 if (!is_dir($dirname)) {
-                    mkdir($dirname, 0775, true);
+                    mkdir($dirname, 0755, true);
                 }
 
                 if (file_exists($name) && !is_writable($name)) {
@@ -101,6 +101,20 @@ abstract class BaseDeploy
     abstract protected function getNormalizedName($name);
 
     abstract protected function generateZipName();
+
+    public function getZipInfo()
+    {
+        $client = HttpUtils::getHttpClient();
+        $response = $client->get($this->zip_url);
+        $body = json_decode($response->getBody(),true);
+        if ($response->getStatusCode() != 200 || $body['status'] != 'finished_export') {
+            return false;
+        }
+
+        $this->zip_url = $body['zip_url'];
+
+        return true;
+    }
 
     /**
      * @return string|null

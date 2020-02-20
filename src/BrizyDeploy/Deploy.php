@@ -4,6 +4,8 @@ namespace BrizyDeploy;
 
 class Deploy extends BaseDeploy
 {
+    const ZIP_INFO_INTERVAL = 10;
+
     /**
      * @var string
      */
@@ -19,7 +21,7 @@ class Deploy extends BaseDeploy
         $this->brizy_cloud_url = $brizy_cloud_url;
         $this->project_hash_id = $project_hash_id;
 
-        parent::__construct($this->brizy_cloud_url . '/projects/' . $this->project_hash_id . '/export');
+        parent::__construct($this->brizy_cloud_url . '/projects/' . $this->project_hash_id . '/export/info');
     }
 
     public function execute()

@@ -58,7 +58,7 @@ switch ($action) {
             exit;
         }
 
-        $deploy->setExecute(true);
+        $deploy->setUpdate(true);
         $deployRepository->update($deploy);
 
         break;
