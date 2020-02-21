@@ -12,7 +12,7 @@ class Deploy
     /**
      * @var int
      */
-    protected $timestamp;
+    protected $deploy_timestamp;
 
     /**
      * @var boolean
@@ -81,18 +81,18 @@ class Deploy
     /**
      * @return int
      */
-    public function getTimestamp()
+    public function getDeployTimestamp()
     {
-        return $this->timestamp;
+        return $this->deploy_timestamp;
     }
 
     /**
-     * @param $timestamp
+     * @param $deploy_timestamp
      * @return $this
      */
-    public function setTimestamp($timestamp)
+    public function setDeployTimestamp($deploy_timestamp)
     {
-        $this->timestamp = $timestamp;
+        $this->deploy_timestamp = $deploy_timestamp;
 
         return $this;
     }

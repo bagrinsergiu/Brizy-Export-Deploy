@@ -27,8 +27,7 @@ $hasMajorProblems = (bool) count($majorProblems);
 $hasMinorProblems = (bool) count($minorProblems);
 
 if ($hasMajorProblems || $hasMinorProblems) {
-    $response = new JsonResponse($majorProblems, 400);
-    $response->send();
+    (new JsonResponse($majorProblems, 400))->send();
     exit;
 }
 
@@ -37,8 +36,7 @@ $request = Request::createFromGlobals();
 $appRepository = new AppRepository();
 $app = $appRepository->get();
 if (!$app || $request->get('app_id') != $app->getAppId()) {
-    $response = new Response('Unauthorized', 401);
-    $response->send();
+    (new Response('Unauthorized', 401))->send();
     exit;
 }
 
@@ -54,11 +52,9 @@ if (!$zip_url = $request->query->get('zip_url')) {
 $update = new Update($zip_url);
 $result = $update->execute();
 if ($result) {
-    $response = new JsonResponse('Done', 200);
+    (new JsonResponse('Done', 200))->send();
 } else {
-    $response = new JsonResponse($update->getErrors(), 400);
+    (new JsonResponse($update->getErrors(), 400))->send();
 }
-
-$response->send();
 
 exit;

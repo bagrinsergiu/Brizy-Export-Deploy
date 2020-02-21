@@ -10,5 +10,4 @@ if (!file_exists($composerAutoload)) {
 
 require $composerAutoload;
 
-$response = new Response("Connected");
-$response->send();
+(new Response("Connected"))->send();

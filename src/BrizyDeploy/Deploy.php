@@ -4,7 +4,7 @@ namespace BrizyDeploy;
 
 class Deploy extends BaseDeploy
 {
-    const ZIP_INFO_INTERVAL = 10;
+    const ZIP_INFO_INTERVAL = 30;
 
     /**
      * @var string

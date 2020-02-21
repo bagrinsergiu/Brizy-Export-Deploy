@@ -46,43 +46,40 @@ $baseUrl = HttpUtils::getBaseUrl(
 );
 
 if ($app->getBaseUrl() != $baseUrl) {
-    $response = new JsonResponse([
-        'message' => 'Invalid base url'
-    ], 400);
-    $response->send();
+    (new JsonResponse(['message' => 'Invalid base url'], 400))->send();
     exit;
 }
 
 $deployRepository = new DeployRepository();
 $deploy = $deployRepository->get();
 if ($deploy && $deploy->getExecute()) {
+    if ($deploy->getZipInfoTimestamp() !== null && (time() - Deploy::ZIP_INFO_INTERVAL) < $deploy->getZipInfoTimestamp()) {
+        (new Response('Synchronization in processing. It can take some time...', 400))->send();
+        exit;
+    }
     $deployService = new Deploy($app->getDeployUrl(), $app->getAppId());
     $zipInfo = $deployService->getZipInfo();
     $deploy->setZipInfoTimestamp(time());
     $deployRepository->update($deploy);
     if (!$zipInfo) {
-        $response = new Response('Sync in processing. It may take a some time.', 400);
-        $response->send();
+        (new Response('Synchronization in processing. It can take some time.', 400))->send();
         exit;
     }
 
     try {
         $deployed = $deployService->execute();
     } catch (\Exception $e) {
-        $response = new Response($e->getMessage() . " in " . $e->getFile(), 500);
-        $response->send();
+        (new Response($e->getMessage() . " in " . $e->getFile(), 400))->send();
         exit;
     }
 
     if (!$deployed) {
-        $errors = $deployService->getErrors();
-        $response = new JsonResponse($errors, 400);
-        $response->send();
+        (new JsonResponse($deployService->getErrors(), 400))->send();
         exit;
     }
 
     $deploy->setExecute(false);
-    $deploy->setTimestamp(time());
+    $deploy->setDeployTimestamp(time());
     $deployRepository->update($deploy);
 }
 
@@ -95,7 +92,7 @@ if ($deploy && $deploy->getUpdate()) {
         if ($zipInfo) {
             $deploy->setExecute(true);
             $deploy->setUpdate(false);
-            $deploy->setTimestamp(time());
+            $deploy->setZipInfoTimestamp(null);
             $deployRepository->update($deploy);
             $response = new RedirectResponse(HttpUtils::getBaseUrl(
                 $request,
@@ -119,8 +116,7 @@ if (!$page = $request->query->get('page')) {
 
 $html = file_get_contents(__DIR__ . '/cache/' . $page . '.html');
 if (!$html) {
-    $response = new Response("Page was not found", 404);
-    $response->send();
+    (new Response("Page was not found", 404))->send();
     exit;
 }
 
@@ -141,7 +137,5 @@ $html = str_replace(
     $html
 );
 
-$response = new Response($html, 200);
-$response->send();
-
+(new Response($html, 200))->send();
 exit;

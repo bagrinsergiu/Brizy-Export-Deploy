@@ -54,8 +54,7 @@ $response = $client->post($url, [
 ]);
 
 if ($response->getStatusCode() != 200) {
-    $response = new Response('Connection error: ' . $response->getBody()->getContents());
-    $response->send();
+    (new Response('Connection error: ' . $response->getBody()->getContents()))->send();
     exit;
 }
 
