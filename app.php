@@ -83,6 +83,10 @@ if ($deploy && $deploy->getExecute()) {
     $deployRepository->update($deploy);
 }
 
+if (!$page = $request->query->get('page')) {
+    $page = 'index';
+}
+
 if ($deploy && $deploy->getUpdate()) {
     $deployService = new Deploy($app->getDeployUrl(), $app->getAppId());
     if ((time() - Deploy::ZIP_INFO_INTERVAL) > $deploy->getZipInfoTimestamp()) {
@@ -94,10 +98,11 @@ if ($deploy && $deploy->getUpdate()) {
             $deploy->setUpdate(false);
             $deploy->setZipInfoTimestamp(null);
             $deployRepository->update($deploy);
+            $page != 'index' ? $route_to = '/' . $page : $route_to = '/';
             $response = new RedirectResponse(HttpUtils::getBaseUrl(
                 $request,
                 '',
-                ''
+                $route_to
             ));
 
             $response->setPrivate();
@@ -108,10 +113,6 @@ if ($deploy && $deploy->getUpdate()) {
             exit;
         }
     }
-}
-
-if (!$page = $request->query->get('page')) {
-    $page = 'index';
 }
 
 $html = file_get_contents(__DIR__ . '/cache/' . $page . '.html');
