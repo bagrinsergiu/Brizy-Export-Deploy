@@ -114,8 +114,23 @@ if ($deploy && $deploy->getUpdate()) {
         }
     }
 }
+$file_name = __DIR__ . '/cache/' . $page . '.html';
+if ($page != 'index' && !file_exists($file_name)) {
+    $response = new RedirectResponse(HttpUtils::getBaseUrl(
+        $request,
+        '',
+        ''
+    ));
 
-$html = file_get_contents(__DIR__ . '/cache/' . $page . '.html');
+    $response->setPrivate();
+    $response->setMaxAge(0);
+    $response->headers->addCacheControlDirective('must-revalidate', true);
+    $response->headers->addCacheControlDirective('no-store', true);
+    $response->send();
+    exit;
+}
+
+$html = file_get_contents($file_name);
 if (!$html) {
     (new Response("Page was not found", 404))->send();
     exit;
