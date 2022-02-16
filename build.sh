@@ -6,9 +6,9 @@ mkdir "export-deploy";
 
 cd /tmp/export-deploy || exit;
 
-git clone --depth=1 --branch=master git@github.com:bagrinsergiu/Brizy-Export-Deploy.git brizy
+git clone --depth=1 --branch=master git@github.com:bagrinsergiu/Brizy-Export-Deploy.git project
 
-cd brizy || exit;
+cd project || exit;
 
 composer install --optimize-autoloader --no-dev
 
@@ -23,7 +23,7 @@ find . -type f -print0 | xargs -0 chmod 0644
 
 cd ../ || exit;
 
-zip -r brizy.zip brizy
+zip -r brizy.zip project
 
 #upload zip to S3
 aws s3 cp brizy.zip s3://brizy-export/
